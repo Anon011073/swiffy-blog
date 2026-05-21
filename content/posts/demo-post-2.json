@@ -1,0 +1,14 @@
+{
+    "title": "Demo Post 2: Exploring the CMS",
+    "slug": "demo-post-2",
+    "content": "<p>This is the content for demo post number 2. This lightweight CMS makes blogging easy and fast.<\/p>\r\n<h3>Why use flat files?<\/h3>\r\n<ul>\r\n    <li>No database setup required<\/li>\r\n    <li>Fast performance<\/li>\r\n    <li>Easy to backup and migrate<\/li>\r\n<\/ul>\r\n<p>Enjoy building your site!<\/p>\r\n<p>\r\n\r\n    [swiffy-gallery images=\"_34b1f55a-ed04-46db-8550-334e3da2a9ab.jpg, _24c44a0c-b674-4c89-b04e-1c2a75349ab1.jpg, _d3240948-1b8b-4feb-88fd-405bbf0c7ea3.jpg, _c01f3ff8-1e1c-4253-ad61-34610477a5dc.jpg\"]<\/p>",
+    "excerpt": "This is a sample excerpt for demo post 2 to show how it appears on the listing page.",
+    "featured_image": "_66f294d4-6f92-4968-951f-96291d52dbac.jpg",
+    "featured_image_x": "50",
+    "featured_image_y": "20",
+    "date": "2026-04-26",
+    "comments_on": true,
+    "categories": "",
+    "tags": "",
+    "status": "published"
+}

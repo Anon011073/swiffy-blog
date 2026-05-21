@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Scotts Blog</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="themes/default/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">    <style>
+        :root {
+            --accent-color: #007bff;
+            --body-font: 'Inter', sans-serif;
+            --title-font: 'Poppins', sans-serif;
+            --body-font-size: 16px;
+            --title-font-size: 32px;
+            --container-width: 1100px;
+            --sidebar-width: 300px;
+
+            --site-title-size: 24px;
+            --site-title-padding: 10px;
+            --site-title-radius: 8px;
+        }
+
+        .site-title a {
+            font-size: var(--site-title-size);
+            
+                    }
+
+        
+        
+        
+                .container { max-width: var(--container-width); }
+        .site-sidebar { width: var(--sidebar-width); }
+    </style>
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <style>
+                .sfx-dl-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 12px;
+                    background: rgba(139, 92, 246, 0.1);
+                    border: 1px solid rgba(139, 92, 246, 0.3);
+                    color: #fff;
+                    padding: 14px 28px;
+                    border-radius: 12px;
+                    text-decoration: none;
+                    font-weight: 700;
+                    position: relative;
+                    overflow: hidden;
+                    transition: all 0.3s ease;
+                    font-family: inherit;
+                    margin: 10px 0;
+                }
+                .sfx-dl-btn:hover {
+                    background: rgba(139, 92, 246, 0.2);
+                    border-color: #8b5cf6;
+                    transform: translateY(-2px);
+                    box-shadow: 0 0 200px rgba(139, 92, 246, 0.4);
+                }
+                .sfx-dl-btn .btn-glow {
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 50%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                    transition: 0.5s;
+                }
+                .sfx-dl-btn:hover .btn-glow {
+                    left: 150%;
+                }
+            </style></head>
+<body class="">
+    <header class="site-header">
+        <div class="container">
+            <div class="header-inner">
+                <div class="site-title">
+                    <a href="index.php">Scotts Blog</a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                                                    <li><a href="index.php">Home</a></li>
+                                                    <li><a href="index.php?page=contact">Contact</a></li>
+                                                    <li><a href="index.php?page=profile">My Profile</a></li>
+                                                    <li><a href="admin">Admin</a></li>
+                                                                        <li class="menu-search">
+                            <form action="index.php" method="GET">
+                                <input type="text" name="s" placeholder="Search..." required>
+                                <button type="submit" aria-label="Search">🔍</button>
+                            </form>
+                        </li>
+                                                <li class="theme-toggle-li">
+                            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                                <span class="light-icon">☀️</span>
+                                <span class="dark-icon">🌙</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="site-layout">
+            <main class="site-main">
+
+<article class="post-full page-full">
+    <header class="post-header">
+        <h1 class="post-title">Contact</h1>
+    </header>
+
+    <div class="post-content">
+        <h2>Get in touch</h2><p>Use this page to provide contact information or a form.</p>
+                <div id="swiffy-contact-form" style="max-width: 500px; margin: 20px 0; background: rgba(128,128,128,0.05); padding: 25px; border-radius: 8px; border: 1px solid rgba(128,128,128,0.1);">
+                    <h3 style="margin-top: 0;">Contact Us</h3>
+                    <div id="contact-status" style="margin-bottom: 15px; display: none; padding: 10px; border-radius: 4px;"></div>
+                    <form onsubmit="sendswiffyContact(event)">
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Name</label>
+                            <input type="text" id="c-name" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd; background: #fff; color: #333;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Email</label>
+                            <input type="email" id="c-email" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd; background: #fff; color: #333;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Message</label>
+                            <textarea id="c-msg" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd; min-height: 100px; background: #fff; color: #333;"></textarea>
+                        </div>
+                        <button type="submit" style="background: #2271b1; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;">Send Message</button>
+                    </form>
+                </div>
+                <script>
+                function sendswiffyContact(e) {
+                    e.preventDefault();
+                    const status = document.getElementById("contact-status");
+                    status.style.display = "block";
+                    status.style.background = "#fff3cd";
+                    status.innerText = "Sending...";
+                    
+                    // In a real app, this would send an AJAX request to a PHP handler
+                    setTimeout(() => {
+                        status.style.background = "#d4edda";
+                        status.style.color = "#155724";
+                        status.innerText = "Thank you! Your message has been sent (Demo only).";
+                        e.target.reset();
+                    }, 1000);
+                }
+                </script>    </div>
+</article>
+
+            </main>
+            <aside class="site-sidebar">
+                <div class="widget search-widget">
+    <h3>Search</h3>
+    <form action="index.php" method="GET" class="search-form">
+        <input type="text" name="s" placeholder="Search posts..." value="">
+        <button type="submit" class="btn">Go</button>
+    </form>
+</div>
+<div class="widget recent-posts-widget">
+    <h3>Recent Posts</h3>
+            <ul>
+                            <li>
+                    <a href="index.php?post=demo-post-author">
+                        Demo Post by an Author                    </a>
+                    <br>
+                    <small>April 29, 2026</small>
+                </li>
+                            <li>
+                    <a href="index.php?post=demo-post-1">
+                        Demo Post 1: Exploring the CMS                    </a>
+                    <br>
+                    <small>April 27, 2026</small>
+                </li>
+                            <li>
+                    <a href="index.php?post=demo-post-2">
+                        Demo Post 2: Exploring the CMS                    </a>
+                    <br>
+                    <small>April 26, 2026</small>
+                </li>
+                            <li>
+                    <a href="index.php?post=demo-post-3">
+                        Demo Post 3: Exploring the CMS                    </a>
+                    <br>
+                    <small>April 25, 2026</small>
+                </li>
+                            <li>
+                    <a href="index.php?post=demo-post-4">
+                        Demo Post 4: Exploring the CMS                    </a>
+                    <br>
+                    <small>April 24, 2026</small>
+                </li>
+                    </ul>
+    </div>
+            </aside>
+        </div>
+    </div>
+    <footer class="site-footer">
+        <div class="container">
+                        <div class="footer-bottom">
+                <a href="#" id="back-to-top">Back to top ↑</a><br>
+                &copy; 2026 Scotts Blog.            </div>
+        </div>
+    </footer>
+    <script>
+        const toggle = document.getElementById('theme-toggle');
+        if (toggle) {
+            toggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                const theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                localStorage.setItem('theme', theme);
+            });
+        }
+
+        const btt = document.getElementById('back-to-top');
+        if (btt) {
+            btt.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script></body>
+</html>

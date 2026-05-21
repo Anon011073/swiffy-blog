@@ -1,0 +1,14 @@
+{
+    "title": "Demo Post by an Author",
+    "slug": "demo-post-author",
+    "content": "<p>This is just a test post by an user with the author role, lets see how this works. Already I see an issue with not having permissions for pages, media and other items I had checkmarked when I adjusted the users permissions.<\/p>\r\n\r\n\r\n<pre><code class=\"language-php\">    \/\/ Single post page\r\n    $post = get_post($post_slug);\r\n    if ($post) {\r\n        render_theme('post', ['post' =&gt; $post, 'config' =&gt; $config]);\r\n    } else {\r\n        header(\"HTTP\/1.0 404 Not Found\");\r\n        die('Post not found');\r\n    }<\/code><\/pre>",
+    "excerpt": "This is just a test post by an user with the author role, lets see how this works.",
+    "featured_image": "_24c44a0c-b674-4c89-b04e-1c2a75349ab1.jpg",
+    "featured_image_x": "56",
+    "featured_image_y": "23",
+    "date": "2026-04-29",
+    "comments_on": true,
+    "categories": "News",
+    "tags": "php, css, html, python",
+    "status": "published"
+}

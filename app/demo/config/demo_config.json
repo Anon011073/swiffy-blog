@@ -1,0 +1,47 @@
+{
+    "site_name": "Demo Test Blog",
+    "admin_nickname": "Admin User",
+    "theme": "default",
+    "comments_enabled": true,
+    "disqus_shortname": "",
+    "show_search_menu": true,
+    "show_excerpts": true,
+    "posts_per_page": 5,
+    "sidebar_position": "right",
+    "widgets": {
+        "search": true,
+        "recent_posts": true
+    },
+    "widget_areas": {
+        "sidebar": [
+            "search",
+            "recent_posts"
+        ],
+        "footer1": [],
+        "footer2": [],
+        "footer3": []
+    },
+    "menu": [
+        {
+            "label": "Home",
+            "url": "index.php"
+        },
+        {
+            "label": "About",
+            "url": "index.php?page=about-us"
+        },
+        {
+            "label": "Contact",
+            "url": "index.php?page=contact"
+        },
+        {
+            "label": "My Profile",
+            "url": "index.php?page=profile"
+        }
+    ],
+    "enabled_plugins": [
+        "prism",
+        "contact",
+        "anon-users"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "title": "Demo Post 5: Exploring the CMS",
+    "slug": "demo-post-5",
+    "content": "<p>This is the content for demo post number 5. This lightweight CMS makes blogging easy and fast.<\/p><h3>Why use flat files?<\/h3><ul><li>No database setup required<\/li><li>Fast performance<\/li><li>Easy to backup and migrate<\/li><\/ul><p>Enjoy building your site!<\/p>",
+    "excerpt": "This is a sample excerpt for demo post 5 to show how it appears on the listing page.",
+    "featured_image": "demo_image.jpg",
+    "date": "2026-04-23",
+    "author": "admin",
+    "comments_on": true
+}
