@@ -134,9 +134,9 @@ function format_size($bytes) {
 
 
         /* Shortcode Helper Styles */
-        .helper-card { margin-top: 30px; border-top: 4px solid #007bff; position: relative; }
+        .helper-card { margin-top: 30px; border-top: 4px solid var(--accent-purple); position: relative; }
         .helper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .helper-badge { background: #007bff; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+        .helper-badge { background: var(--accent-purple); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
         .helper-preview { background: #f8f9fa; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px; min-height: 45px; color: #718096; font-size: 0.9rem; }
         .shortcode-box { background: #1a202c; color: #fff; padding: 15px; border-radius: 8px; display: flex; align-items: center; gap: 15px; font-family: monospace; }
         .shortcode-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1.1rem; }
@@ -243,6 +243,7 @@ function format_size($bytes) {
             <?php endif; ?>
 
 
+        </div>
         <?php if ($tab === "images" && $gallery_enabled): ?>
         <div class="card helper-card" id="shortcodeHelper">
             <div class="helper-header">
