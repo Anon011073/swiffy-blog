@@ -1,6 +1,6 @@
 <?php
 /**
- * Prism Syntax Highlighter for AnonBlog
+ * Prism Syntax Highlighter for Swiffy Blog
  */
 
 $config = load_config();

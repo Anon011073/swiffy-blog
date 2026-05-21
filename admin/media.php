@@ -10,6 +10,7 @@ $success = '';
 $images_dir = __DIR__ . '/../uploads/';
 $files_dir = __DIR__ . '/../content/protected-uploads/';
 $plugin_enabled = in_array('swiffy-download-gateway', $config['enabled_plugins'] ?? []);
+$gallery_enabled = in_array('swiffy-gallery', $config['enabled_plugins'] ?? []);
 
 if (!is_dir($files_dir)) mkdir($files_dir, 0755, true);
 
@@ -130,6 +131,22 @@ function format_size($bytes) {
         .log-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
         .log-table th, .log-table td { text-align: left; padding: 12px; border-bottom: 1px solid #edf2f7; }
         .log-table th { background: #f7fafc; color: #4a5568; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
+
+        /* Shortcode Helper Styles */
+        .helper-card { margin-top: 30px; border-top: 4px solid var(--accent-purple); position: relative; }
+        .helper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .helper-badge { background: #007bff; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+        .helper-preview { background: #f8f9fa; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px; min-height: 45px; color: #718096; font-size: 0.9rem; }
+        .shortcode-box { background: #1a202c; color: #fff; padding: 15px; border-radius: 8px; display: flex; align-items: center; gap: 15px; font-family: monospace; }
+        .shortcode-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1.1rem; }
+        .helper-btns { display: flex; gap: 10px; }
+        .helper-btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .btn-copy { background: #22c55e; color: #fff; }
+        .btn-copy:hover { background: #16a34a; }
+        .btn-clear { background: #4b5563; color: #fff; }
+        .btn-clear:hover { background: #374151; }
+        .media-item.selected { border: 2px solid var(--accent-purple); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); transform: translateY(-4px); }
     </style>
 </head>
 <body>
@@ -194,7 +211,7 @@ function format_size($bytes) {
                     $ext = pathinfo($name, PATHINFO_EXTENSION);
                     $size = format_size(filesize($item));
                 ?>
-                    <div class="media-item">
+                    <div class="media-item" <?php echo ($tab === "images" && $gallery_enabled) ? "onclick=\"toggleSelect(this, '".addslashes($name)."')\"" : ""; ?>>
                         <div class="actions">
                             <?php if ($tab === 'files'): ?>
                                 <a href="#" class="action-btn" title="Copy Shortcode" onclick="copyText('[sfx-download file=&quot;<?php echo addslashes($name); ?>&quot; label=&quot;Download <?php echo addslashes($name); ?>&quot;]'); return false;">🔗</a>
@@ -227,7 +244,73 @@ function format_size($bytes) {
         </div>
     </div>
 
+
+        <?php if ($tab === "images" && $gallery_enabled): ?>
+        <div class="card helper-card" id="shortcodeHelper">
+            <div class="helper-header">
+                <h3>🖼️ Gallery Shortcode Helper</h3>
+                <span class="helper-badge" id="selectedCount">0 selected</span>
+            </div>
+            <p style="margin-bottom: 10px; font-size: 0.95rem; color: #4a5568;">Click images above to select them. Then copy this shortcode into your post content.</p>
+
+            <div class="helper-preview" id="imagePreviewNames">No images selected.</div>
+
+            <div class="shortcode-box">
+                <div class="shortcode-text" id="shortcodeOutput">[swiffy-gallery images=""]</div>
+                <div class="helper-btns">
+                    <button class="helper-btn btn-copy" onclick="copyGalleryShortcode()">Copy</button>
+                    <button class="helper-btn btn-clear" onclick="clearSelection()">Clear</button>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
     <script>
+    let selectedImages = [];
+
+    function toggleSelect(el, name) {
+        const index = selectedImages.indexOf(name);
+        if (index === -1) {
+            selectedImages.push(name);
+            el.classList.add("selected");
+        } else {
+            selectedImages.splice(index, 1);
+            el.classList.remove("selected");
+        }
+        updateHelper();
+    }
+
+    function updateHelper() {
+        const countEl = document.getElementById("selectedCount");
+        const previewEl = document.getElementById("imagePreviewNames");
+        const outputEl = document.getElementById("shortcodeOutput");
+
+        if (countEl) countEl.innerText = `${selectedImages.length} selected`;
+
+        if (selectedImages.length > 0) {
+            if (previewEl) previewEl.innerText = selectedImages.join(", ");
+            if (outputEl) outputEl.innerText = `[swiffy-gallery images="${selectedImages.join(", ")}"]`;
+        } else {
+            if (previewEl) previewEl.innerText = "No images selected.";
+            if (outputEl) outputEl.innerText = "[swiffy-gallery images=\"\"]";
+        }
+    }
+
+    function clearSelection() {
+        selectedImages = [];
+        document.querySelectorAll(".media-item.selected").forEach(el => el.classList.remove("selected"));
+        updateHelper();
+    }
+
+    function copyGalleryShortcode() {
+        const text = document.getElementById("shortcodeOutput").innerText;
+        if (selectedImages.length === 0) {
+            alert("Please select at least one image first.");
+            return;
+        }
+        copyText(text);
+    }
+
     function copyText(text) {
         const el = document.createElement('textarea');
         el.value = text;

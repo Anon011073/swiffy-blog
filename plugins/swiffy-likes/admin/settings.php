@@ -36,7 +36,7 @@ $stats = file_exists($file) ? json_decode(file_get_contents($file), true) : [];
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Like Stats & Settings - AnonBlog Admin</title>
+    <title>Like Stats & Settings - Swiffy Blog Admin</title>
     <link rel="stylesheet" href="../../../admin/style.css">
     <style>
         .main-content { margin-left: 310px; margin-top: 60px; padding: 20px; }

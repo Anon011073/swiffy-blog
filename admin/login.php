@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <button type="submit">Login</button>
         </form>
-        <?php if (load_config()['enabled_plugins'] && in_array('anon-users', load_config()['enabled_plugins'])): ?>
+        <?php if (load_config()['enabled_plugins'] && in_array('swiffy-users', load_config()['enabled_plugins'])): ?>
             <p style="text-align: center; margin-top: 15px; font-size: 0.9rem;">
                 Don't have an account? <a href="../index.php?page=register" style="color: #007bff;">Register here</a>
             </p>

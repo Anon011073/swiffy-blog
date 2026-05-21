@@ -36,7 +36,7 @@ $google_fonts = [
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Prism Settings - AnonBlog Admin</title>
+    <title>Prism Settings - Swiffy Blog Admin</title>
     <link rel="stylesheet" href="../../../admin/style.css">
     <style>
         .main-content { margin-left: 310px; margin-top: 60px; padding: 20px; }

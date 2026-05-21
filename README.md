@@ -1,6 +1,6 @@
-# AnonBlog CMS v1.0.0-beta
+# Swiffy Blog CMS v1.0.0-beta
 
-AnonBlog is a lightweight, fast, and secure flat-file blogging CMS built with vanilla PHP. No database, no heavy frameworks—just pure performance and simplicity.
+Swiffy Blog is a lightweight, fast, and secure flat-file blogging CMS built with vanilla PHP. No database, no heavy frameworks—just pure performance and simplicity.
 
 ![Admin Dashboard](docs/screenshots/admin_dashboard.png)
 
@@ -32,15 +32,15 @@ AnonBlog is a lightweight, fast, and secure flat-file blogging CMS built with va
 
 ## 🔮 Planned Features (Premium & Core)
 
-We are constantly evolving AnonBlog. Here is what is on the roadmap:
+We are constantly evolving Swiffy Blog. Here is what is on the roadmap:
 
 - **Advanced User Roles & Registration**: A powerful plugin system to handle Admin, Author, and Subscriber roles. Authors can draft posts for admin review, and regular users get a personal profile and comment history.
 - **Premium Themes**: More highly optimized and niche-specific templates.
 - **Newsletter Plugin**: Simple subscriber management and email notifications for new posts.
 - **Advanced SEO Suite**: Sitemaps, OpenGraph meta tags, and schema markup.
-- **AnonTax (Categories & Tags)**: Group your posts for better navigation.
+- **SwiffyTax (Categories & Tags)**: Group your posts for better navigation.
 - **Multi-language Support**: Translate your blog into multiple languages.
 
 ---
 
-*AnonBlog - Keeping blogging simple.*
+*Swiffy Blog - Keeping blogging simple.*

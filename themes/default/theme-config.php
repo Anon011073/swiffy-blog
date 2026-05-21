@@ -4,8 +4,8 @@
  */
 return [
     'name' => 'Default',
-    'description' => 'The standard AnonBlog theme, clean and powerful.',
-    'author' => 'AnonBlog Team',
+    'description' => 'The standard Swiffy Blog theme, clean and powerful.',
+    'author' => 'Swiffy Blog Team',
     'version' => '1.3.0',
     'options' => [
         [

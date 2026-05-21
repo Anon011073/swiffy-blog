@@ -6,7 +6,7 @@
 
 return [
     'name' => 'Starter Theme',
-    'author' => 'AnonBlog Team',
+    'author' => 'Swiffy Blog Team',
     'version' => '1.0.0',
     'description' => 'A clean starting point for theme developers with built-in customization support.',
     'options' => [
@@ -36,7 +36,7 @@ return [
             'name' => 'footer_text',
             'label' => 'Custom Footer Copyright',
             'type' => 'text',
-            'default' => 'Powered by AnonBlog'
+            'default' => 'Powered by Swiffy Blog'
         ],
         /*
         // SELECT OPTION EXAMPLE:

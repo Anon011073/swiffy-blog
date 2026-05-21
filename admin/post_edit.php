@@ -60,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $post_data['status'] = 'published';
-        if (isset($_SESSION['anon_user'])) {
-            $user = $_SESSION['anon_user'];
+        if (isset($_SESSION['swiffy_user'])) {
+            $user = $_SESSION['swiffy_user'];
             if (!($user['auto_approve_posts'] ?? false)) {
                 $post_data['status'] = 'pending';
             }

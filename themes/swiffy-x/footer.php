@@ -40,7 +40,7 @@
                         <?php if (!empty($config['footer_text'])): ?>
                             <?php echo nl2br(htmlspecialchars($config['footer_text'])); ?>
                         <?php else: ?>
-                            &copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($config['site_name']); ?>. Inspired by Zipply.
+                            &copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($config['site_name']); ?>. Inspired by Swiffy.
                         <?php endif; ?>
                     </div>
                 </div>

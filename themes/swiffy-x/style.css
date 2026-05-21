@@ -1,6 +1,6 @@
 /*
 Theme Name: Swiffy-X
-Description: A high-performance reading theme with a Zipply-inspired design system.
+Description: A high-performance reading theme with a Swiffy-inspired design system.
 Author: Swiffy Team
 Version: 1.8.0
 */
@@ -437,6 +437,7 @@ a {
     .post-card-image {
         height: 200px;
     }
+}
     /* Improved Search Widget */
 .widget-search .search-input-wrapper {
     display: flex;
@@ -547,8 +548,8 @@ a {
 
 .sfx-scroll-up svg {
     display: block !important;
-    width: 28px !important;
-    height: 28px !important;
+    width: calc(var(--sfx-sz, 56px) * 0.45) !important;
+    height: calc(var(--sfx-sz, 56px) * 0.45) !important;
     margin: 0 !important;
 }
 
@@ -559,4 +560,5 @@ a {
     font-weight: 800 !important;
     margin-top: 2px !important;
     text-transform: uppercase !important;
+    text-align: center !important;
 }

@@ -5,7 +5,7 @@
 return [
     'name' => 'Darkling',
     'description' => 'A dark-first, widget-centric theme with a clean aesthetic.',
-    'author' => 'AnonBlog Team',
+    'author' => 'Swiffy Blog Team',
     'version' => '1.0.0',
     'options' => [
         [

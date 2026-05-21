@@ -20,7 +20,7 @@ if (!isset($data[$slug])) {
 if (session_status() === PHP_SESSION_NONE) session_start();
 
 $session_key = "voted_" . $slug;
-$cookie_key = "anon_voted_" . substr(md5($slug), 0, 10);
+$cookie_key = "swiffy_voted_" . substr(md5($slug), 0, 10);
 
 if (isset($_SESSION[$session_key]) || isset($_COOKIE[$cookie_key])) {
     echo json_encode([

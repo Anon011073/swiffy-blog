@@ -11,7 +11,7 @@ $config = load_config();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - AnonBlog Admin</title>
+    <title>Dashboard - Swiffy Blog Admin</title>
     <style>
         body { font-family: sans-serif; margin: 0; display: flex; min-height: 100vh; background: #f4f4f4; }
         .sidebar { width: 250px; background: #222; color: #fff; padding: 1rem; flex-shrink: 0; }
@@ -38,8 +38,8 @@ $config = load_config();
                 <div id="news-feed">
                     <div class="news-item">
                         <div class="news-date">April 28, 2024</div>
-                        <strong>AnonBlog v1.0.0-beta Released!</strong>
-                        <p>Welcome to the first beta release of AnonBlog. Explore the new features and start blogging!</p>
+                        <strong>Swiffy Blog v1.0.0-beta Released!</strong>
+                        <p>Welcome to the first beta release of Swiffy Blog. Explore the new features and start blogging!</p>
                     </div>
                     <div class="news-item">
                         <div class="news-date">April 27, 2024</div>
