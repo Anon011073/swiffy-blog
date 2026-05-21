@@ -134,7 +134,7 @@ function format_size($bytes) {
 
 
         /* Shortcode Helper Styles */
-        .helper-card { margin-top: 30px; border-top: 4px solid var(--accent-purple); position: relative; }
+        .helper-card { margin-top: 30px; border-top: 4px solid #007bff; position: relative; }
         .helper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .helper-badge { background: #007bff; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
         .helper-preview { background: #f8f9fa; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px; min-height: 45px; color: #718096; font-size: 0.9rem; }
@@ -241,8 +241,6 @@ function format_size($bytes) {
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
-        </div>
-    </div>
 
 
         <?php if ($tab === "images" && $gallery_enabled): ?>
@@ -264,6 +262,7 @@ function format_size($bytes) {
             </div>
         </div>
         <?php endif; ?>
+    </div>
 
     <script>
     let selectedImages = [];
