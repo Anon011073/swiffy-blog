@@ -37,7 +37,7 @@ return array (
   'enabled_plugins' => 
   array (
     0 => 'swiffy-prism',
-    1 => 'swiffy-anon-users',
+    1 => 'swiffy-swiffy-users',
     2 => 'swiffy-simple-gallery',
     3 => 'swiffy-download-gateway',
     4 => 'swiffy-likes',

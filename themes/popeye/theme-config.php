@@ -5,7 +5,7 @@
 return [
     'name' => 'Popeye',
     'description' => 'A clean, single-column focused theme for minimalists.',
-    'author' => 'AnonBlog Team',
+    'author' => 'Swiffy Blog Team',
     'version' => '1.2.0',
     'options' => [
         [

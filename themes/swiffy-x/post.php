@@ -81,7 +81,7 @@
                         if (!($comment['approved'] ?? false)) continue;
             ?>
                         <div class="comment" style="margin-bottom: var(--space-md); padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color);">
-                            <strong style="color: var(--accent-green); display: block; margin-bottom: 4px;"><?php echo htmlspecialchars($comment['nickname'] ?? 'Anonymous'); ?></strong>
+                            <strong style="color: var(--accent-green); display: block; margin-bottom: 4px;"><?php echo htmlspecialchars($comment['nickname'] ?? 'Swiffyymous'); ?></strong>
                             <div style="color: var(--text-secondary); font-size: 1rem;"><?php echo nl2br(htmlspecialchars($comment['content'] ?? '')); ?></div>
                         </div>
             <?php

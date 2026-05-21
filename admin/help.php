@@ -11,7 +11,7 @@ $config = load_config();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help & Documentation - AnonBlog Admin</title>
+    <title>Help & Documentation - Swiffy Blog Admin</title>
     <style>
         body { font-family: sans-serif; margin: 0; display: flex; min-height: 100vh; background: #f4f4f4; }
         .main-content { flex: 1; padding: 2rem; margin-left: 310px; margin-top: 50px; overflow-y: auto; }

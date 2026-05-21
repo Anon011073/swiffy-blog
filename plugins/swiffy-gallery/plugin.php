@@ -1,6 +1,6 @@
 <?php
 /**
- * Image swiffy-gallery Plugin for AnonBlog
+ * Image swiffy-gallery Plugin for Swiffy Blog
  */
 
 $config = load_config();
@@ -13,9 +13,9 @@ $swiffy_gallery_options = $config['swiffy_gallery_options'] ?? [
 ];
 
 return [
-    'name' => 'gallery',
+    'name' => 'Swiffy Gallery',
     'description' => 'Add image galleries to your posts using [swiffy-gallery images="img1,img2"] shortcode.',
-    'author' => 'AnonBlog Team',
+    'author' => 'Swiffy Team',
     'version' => '1.3.0',
     'settings_url' => '../plugins/swiffy-gallery/admin/settings.php',
     'hooks' => [
@@ -27,13 +27,13 @@ return [
                 $layout = $swiffy_gallery_options['layout'] ?? 'grid';
                 $gap = $swiffy_gallery_options['gap'];
                 $radius = $swiffy_gallery_options['border_radius'];
-                $id = 'anon-gallery-' . uniqid();
+                $id = 'swiffy-gallery-' . uniqid();
                 
                 $html = '';
 
                 if ($layout === 'slider') {
                     $html .= '
-                    <div id="'.$id.'" class="anon-gallery-slider" style="position: relative; overflow: hidden; margin: 25px 0; border-radius: '.$radius.'px; background: rgba(0,0,0,0.05);">
+                    <div id="'.$id.'" class="swiffy-gallery-slider" style="position: relative; overflow: hidden; margin: 25px 0; border-radius: '.$radius.'px; background: rgba(0,0,0,0.05);">
                         <div class="slider-track" style="display: flex; transition: transform 0.5s ease-in-out;">';
                     foreach ($images as $img) {
                         $full = "uploads/" . htmlspecialchars($img);
@@ -42,12 +42,12 @@ return [
                                   </div>';
                     }
                     $html .= '</div>
-                        <button onclick="anonSliderPrev(\''.$id.'\')" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 15px 10px; cursor: pointer; border-radius: 4px; z-index: 10;">&#10094;</button>
-                        <button onclick="anonSliderNext(\''.$id.'\')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 15px 10px; cursor: pointer; border-radius: 4px; z-index: 10;">&#10095;</button>
+                        <button onclick="swiffySliderPrev(\''.$id.'\')" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 15px 10px; cursor: pointer; border-radius: 4px; z-index: 10;">&#10094;</button>
+                        <button onclick="swiffySliderNext(\''.$id.'\')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 15px 10px; cursor: pointer; border-radius: 4px; z-index: 10;">&#10095;</button>
                     </div>
                     <script>
-                    if (typeof anonSliderNext !== "function") {
-                        function anonSliderNext(id) {
+                    if (typeof swiffySliderNext !== "function") {
+                        function swiffySliderNext(id) {
                             const track = document.querySelector("#" + id + " .slider-track");
                             const slides = track.children.length;
                             let current = parseInt(track.dataset.current || 0);
@@ -55,7 +55,7 @@ return [
                             track.style.transform = `translateX(-${current * 100}%)`;
                             track.dataset.current = current;
                         }
-                        function anonSliderPrev(id) {
+                        function swiffySliderPrev(id) {
                             const track = document.querySelector("#" + id + " .slider-track");
                             const slides = track.children.length;
                             let current = parseInt(track.dataset.current || 0);
@@ -68,7 +68,7 @@ return [
                 } else {
                     // Grid Layout
                     $cols = $swiffy_gallery_options['columns'];
-                    $html .= '<div class="anon-gallery-grid" style="display: grid; grid-template-columns: repeat('.$cols.', 1fr); gap: '.$gap.'px; margin: 25px 0;">';
+                    $html .= '<div class="swiffy-gallery-grid" style="display: grid; grid-template-columns: repeat('.$cols.', 1fr); gap: '.$gap.'px; margin: 25px 0;">';
                     foreach ($images as $img) {
                         $thumb = "plugins/swiffy-gallery/thumb.php?src=" . urlencode($img) . "&w=400&h=400";
                         $full = "uploads/" . htmlspecialchars($img);
@@ -83,7 +83,7 @@ return [
                         $html .= '</div>';
                     }
                     $html .= '</div>';
-                    $html .= '<style>@media (max-width: 768px) { .anon-gallery-grid { grid-template-columns: repeat(2, 1fr) !important; } } @media (max-width: 480px) { .anon-gallery-grid { grid-template-columns: 1fr !important; } }</style>';
+                    $html .= '<style>@media (max-width: 768px) { .swiffy-gallery-grid { grid-template-columns: repeat(2, 1fr) !important; } } @media (max-width: 480px) { .swiffy-gallery-grid { grid-template-columns: 1fr !important; } }</style>';
                 }
                 
                 return $html;

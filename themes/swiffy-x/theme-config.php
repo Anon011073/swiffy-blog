@@ -37,7 +37,7 @@ return [
         ['name' => 'show_search_nav', 'label' => 'Show Navigation Search', 'type' => 'checkbox', 'default' => true, 'section' => 'layout'],
 
         // Effects
-        ['name' => 'enable_comet_cursor', 'label' => 'Enable Zipply Comet Effect', 'type' => 'checkbox', 'default' => true, 'section' => 'fx'],
+        ['name' => 'enable_comet_cursor', 'label' => 'Enable Swiffy Comet Effect', 'type' => 'checkbox', 'default' => true, 'section' => 'fx'],
         ['name' => 'custom_css', 'label' => 'Global Custom CSS', 'type' => 'textarea', 'default' => '', 'section' => 'fx']
     ]
 ];

@@ -7,14 +7,12 @@
         $btt_size = (int)($config['back_to_top_size'] ?? 56);
     ?>
     <a href="#" class="sfx-scroll-up" id="sfxScrollBtn" aria-label="Back to Top" style="--sfx-bg: <?php echo !empty($btt_color) ? $btt_color : "#8b5cf6"; ?>; --sfx-sz: <?php echo $btt_size; ?>px;">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%;">
-            <?php if ($btt_type === 'icon' || $btt_type === 'both'): ?>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
-            <?php endif; ?>
-            <?php if ($btt_type === 'text' || $btt_type === 'both'): ?>
-                <span class="btt-text"><?php echo htmlspecialchars($btt_text); ?></span>
-            <?php endif; ?>
-        </div>
+        <?php if ($btt_type === 'icon' || $btt_type === 'both'): ?>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+        <?php endif; ?>
+        <?php if ($btt_type === 'text' || $btt_type === 'both'): ?>
+            <span class="btt-text"><?php echo htmlspecialchars($btt_text); ?></span>
+        <?php endif; ?>
     </a>
     <?php endif; ?>
 
@@ -42,7 +40,7 @@
                         <?php if (!empty($config['footer_text'])): ?>
                             <?php echo nl2br(htmlspecialchars($config['footer_text'])); ?>
                         <?php else: ?>
-                            &copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($config['site_name']); ?>. Inspired by Zipply.
+                            &copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($config['site_name']); ?>. Inspired by Swiffy.
                         <?php endif; ?>
                     </div>
                 </div>

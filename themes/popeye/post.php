@@ -39,7 +39,7 @@
         $author_avatar = $config['admin_avatar'] ?? '';
         $author_bio = $config['admin_about_me'] ?? '';
 
-        // If post has a custom author from AnonUsers Pro
+        // If post has a custom author from SwiffyUsers Pro
         if (!empty($post['author'])) {
             $u_file = __DIR__ . '/../../content/users/' . $post['author'] . '.json';
             if (file_exists($u_file)) {

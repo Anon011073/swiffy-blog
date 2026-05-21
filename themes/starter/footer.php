@@ -16,7 +16,7 @@
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; <?php echo date('Y'); ?> <?php echo !empty($config['footer_text']) ? nl2br(htmlspecialchars($config['footer_text'])) : '<?php echo htmlspecialchars($config['theme_options']['footer_text'] ?? 'AnonBlog'); ?>copy; ' . date('Y') . ' ' . htmlspecialchars($config['site_name']); ?></p>
+            <p>&copy; <?php echo date('Y'); ?> <?php echo !empty($config['footer_text']) ? nl2br(htmlspecialchars($config['footer_text'])) : '<?php echo htmlspecialchars($config['theme_options']['footer_text'] ?? 'Swiffy Blog'); ?>copy; ' . date('Y') . ' ' . htmlspecialchars($config['site_name']); ?></p>
         </div>
     </footer>
 </body>

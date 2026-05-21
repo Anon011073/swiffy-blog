@@ -5,13 +5,13 @@ $admin_base = (strpos($_SERVER['PHP_SELF'], '/plugins/') !== false) ? '../../../
 
 // Role-based access control for Sidebar
 $user_role = 'Admin';
-if (isset($_SESSION['anon_user'])) {
-    $user_role = $_SESSION['anon_user']['role'] ?? 'Subscriber';
+if (isset($_SESSION['swiffy_user'])) {
+    $user_role = $_SESSION['swiffy_user']['role'] ?? 'Subscriber';
 }
 $is_admin = isset($_SESSION['admin_logged_in']);
 ?>
 <div style="height: 50px; background: #000; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; font-family: sans-serif;">
-    <div style="font-weight: bold;"><?php echo htmlspecialchars($config['site_name'] ?? 'AnonBlog'); ?> Admin</div>
+    <div style="font-weight: bold;"><?php echo htmlspecialchars($config['site_name'] ?? 'Swiffy Blog'); ?> Admin</div>
     <div style="display: flex; gap: 20px; font-size: 0.9rem;">
         <a href="<?php echo $admin_base; ?>../index.php" target="_blank" style="color: #fff; text-decoration: none;">🌐 View Site</a>
         <a href="<?php echo $admin_base; ?>backup.php" style="color: #fff; text-decoration: none;">💾 Backup</a>
@@ -43,9 +43,9 @@ $is_admin = isset($_SESSION['admin_logged_in']);
 
         <?php if ($is_admin): ?>
             <?php
-            if (isset($config['enabled_plugins']) && in_array('anon-users', $config['enabled_plugins'])):
+            if (isset($config['enabled_plugins']) && in_array('swiffy-users', $config['enabled_plugins'])):
             ?>
-                <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>../plugins/anon-users/admin/manage.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo strpos($_SERVER['PHP_SELF'], 'anon-users/admin/manage.php') !== false ? 'active' : ''; ?>">Users</a></li>
+                <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>../plugins/swiffy-users/admin/manage.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo strpos($_SERVER['PHP_SELF'], 'swiffy-users/admin/manage.php') !== false ? 'active' : ''; ?>">Users</a></li>
             <?php endif; ?>
             <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>settings.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">Settings</a></li>
             <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>themes.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'themes.php' ? 'active' : ''; ?>">Themes</a></li>
@@ -60,6 +60,6 @@ $is_admin = isset($_SESSION['admin_logged_in']);
         .sidebar a:hover { background: #333; color: #fff !important; }
     </style>
     <div style="padding: 10px; font-size: 0.8rem; color: #666; border-top: 1px solid #333; margin-top: 20px;">
-        Version: <?php echo ANONBLOG_VERSION; ?>
+        Version: <?php echo SWIFFYBLOG_VERSION; ?>
     </div>
 </div>

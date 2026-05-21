@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-define('ANONBLOG_VERSION', '1.0.0-beta');
+define('SWIFFYBLOG_VERSION', '1.0.0-beta');
 
 /**
  * Sanitize input

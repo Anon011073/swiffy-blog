@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>swiffy-gallery Settings - AnonBlog Admin</title>
+    <title>swiffy-gallery Settings - Swiffy Blog Admin</title>
     <link rel="stylesheet" href="../../../admin/style.css">
     <style>
         .main-content { margin-left: 310px; margin-top: 60px; padding: 20px; }

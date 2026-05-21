@@ -15,9 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($post_slug && $nickname && $content) {
         $approved = is_logged_in(); // Auto-approve if admin is logged in
 
-        // Check for AnonUsers auto-approval
-        if (!$approved && isset($_SESSION['anon_user'])) {
-            $user = $_SESSION['anon_user'];
+        // Check for SwiffyUsers auto-approval
+        if (!$approved && isset($_SESSION['swiffy_user'])) {
+            $user = $_SESSION['swiffy_user'];
             if ($user['auto_approve_comments'] ?? false) {
                 $approved = true;
             }

@@ -7,40 +7,49 @@ require_login('media');
 $config = load_config();
 $error = '';
 $success = '';
-
-$tab = $_GET['tab'] ?? 'images';
 $images_dir = __DIR__ . '/../uploads/';
 $files_dir = __DIR__ . '/../content/protected-uploads/';
+$plugin_enabled = in_array('swiffy-download-gateway', $config['enabled_plugins'] ?? []);
+$gallery_enabled = in_array('swiffy-gallery', $config['enabled_plugins'] ?? []);
 
-if (!is_dir($images_dir)) mkdir($images_dir, 0755, true);
 if (!is_dir($files_dir)) mkdir($files_dir, 0755, true);
 
-$plugin_enabled = isset($config['enabled_plugins']) && in_array('swiffy-download-gateway', $config['enabled_plugins']);
-$gallery_enabled = isset($config['enabled_plugins']) && in_array('swiffy-gallery', $config['enabled_plugins']);
+$tab = $_GET['tab'] ?? 'images';
 
-// Handle uploads
+// Force images tab if plugin is disabled
+if ($tab === 'files' && !$plugin_enabled) $tab = 'images';
+
+// Handle Uploads
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['files'])) {
     if (!verify_csrf_token($_POST['csrf_token'])) die('CSRF token validation failed.');
 
-    $target_dir = ($tab === 'files') ? $files_dir : $images_dir;
-    $allowed_exts = ($tab === 'files')
-        ? ['zip', 'rar', 'pdf', 'exe', 'mp3', 'doc', 'docx', 'xls', 'xlsx']
-        : ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-
     $files = $_FILES['files'];
+    $uploaded_count = 0;
     $errors = [];
+    $target_dir = ($tab === 'files') ? $files_dir : $images_dir;
+
     for ($i = 0; $i < count($files['name']); $i++) {
-        if ($files['error'][$i] === UPLOAD_ERR_OK) {
-            $name = sanitize(basename($files['name'][$i]));
-            $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-            if (in_array($ext, $allowed_exts)) {
-                move_uploaded_file($files['tmp_name'][$i], $target_dir . $name);
-            } else {
-                $errors[] = "File type not allowed: " . $name;
-            }
+        if ($files['error'][$i] !== UPLOAD_ERR_OK) continue;
+
+        $filename = basename($files['name'][$i]);
+        $target_file = $target_dir . $filename;
+
+        $j = 1;
+        while (file_exists($target_file)) {
+            $parts = pathinfo($filename);
+            $new_filename = $parts['filename'] . '_' . $j . '.' . ($parts['extension'] ?? '');
+            $target_file = $target_dir . $new_filename;
+            $j++;
+        }
+
+        if (move_uploaded_file($files['tmp_name'][$i], $target_file)) {
+            $uploaded_count++;
+        } else {
+            $errors[] = "Failed to upload {$files['name'][$i]}.";
         }
     }
-    if (empty($errors)) $success = "Files uploaded successfully!";
+
+    if ($uploaded_count > 0) $success = "$uploaded_count items uploaded successfully.";
     if (!empty($errors)) $error = implode('<br>', $errors);
 }
 
@@ -101,19 +110,18 @@ function format_size($bytes) {
         .upload-area:hover { border-color: var(--accent-purple); background: #f0f4ff; }
 
         .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-        .media-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; position: relative; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: default; }
+        .media-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; position: relative; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .media-item:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -5px rgba(0,0,0,0.1); border-color: var(--accent-purple); }
-        .media-item.selected { border: 2px solid var(--accent-purple); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); transform: translateY(-4px); }
 
         .preview-box { width: 100%; aspect-ratio: 16/10; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .preview-box img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        .preview-box img { width: 100%; height: 100%; object-fit: cover; }
         .file-ext-icon { font-size: 2.5rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; font-family: monospace; }
 
-        .item-info { padding: 12px; border-top: 1px solid #eee; pointer-events: none; }
+        .item-info { padding: 12px; border-top: 1px solid #eee; }
         .item-name { display: block; font-size: 0.85rem; font-weight: 700; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
         .item-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #718096; }
 
-        .actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; opacity: 0; transition: 0.3s; z-index: 10; }
+        .actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; opacity: 0; transition: 0.3s; }
         .media-item:hover .actions { opacity: 1; }
 
         .action-btn { background: #fff; border: 1px solid #eee; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -123,6 +131,7 @@ function format_size($bytes) {
         .log-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
         .log-table th, .log-table td { text-align: left; padding: 12px; border-bottom: 1px solid #edf2f7; }
         .log-table th { background: #f7fafc; color: #4a5568; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
 
         /* Shortcode Helper Styles */
         .helper-card { margin-top: 30px; border-top: 4px solid var(--accent-purple); position: relative; }
@@ -137,6 +146,7 @@ function format_size($bytes) {
         .btn-copy:hover { background: #16a34a; }
         .btn-clear { background: #4b5563; color: #fff; }
         .btn-clear:hover { background: #374151; }
+        .media-item.selected { border: 2px solid var(--accent-purple); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); transform: translateY(-4px); }
     </style>
 </head>
 <body>
@@ -201,16 +211,16 @@ function format_size($bytes) {
                     $ext = pathinfo($name, PATHINFO_EXTENSION);
                     $size = format_size(filesize($item));
                 ?>
-                    <div class="media-item" <?php echo ($tab === 'images' && $gallery_enabled) ? 'onclick="toggleSelect(this, \''.addslashes($name).'\')"' : ''; ?>>
+                    <div class="media-item" <?php echo ($tab === "images" && $gallery_enabled) ? "onclick=\"toggleSelect(this, '".addslashes($name)."')\"" : ""; ?>>
                         <div class="actions">
                             <?php if ($tab === 'files'): ?>
-                                <a href="#" class="action-btn" title="Copy Shortcode" onclick="copyText('[sfx-download file=&quot;<?php echo addslashes($name); ?>&quot; label=&quot;Download <?php echo addslashes($name); ?>&quot;]'); event.stopPropagation(); return false;">🔗</a>
+                                <a href="#" class="action-btn" title="Copy Shortcode" onclick="copyText('[sfx-download file=&quot;<?php echo addslashes($name); ?>&quot; label=&quot;Download <?php echo addslashes($name); ?>&quot;]'); return false;">🔗</a>
                             <?php else: ?>
-                                <a href="media_crop.php?img=<?php echo urlencode($name); ?>" class="action-btn" title="Crop" onclick="event.stopPropagation();">✂️</a>
+                                <a href="media_crop.php?img=<?php echo urlencode($name); ?>" class="action-btn" title="Crop">✂️</a>
                             <?php endif; ?>
                             <a href="media.php?tab=<?php echo $tab; ?>&delete=<?php echo urlencode($name); ?>&token=<?php echo get_csrf_token(); ?>"
                                class="action-btn btn-del"
-                               onclick="event.stopPropagation(); return confirm('Permanently delete this item?')" title="Delete">🗑️</a>
+                               onclick="return confirm('Permanently delete this item?')" title="Delete">🗑️</a>
                         </div>
 
                         <div class="preview-box">
@@ -232,8 +242,10 @@ function format_size($bytes) {
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
+    </div>
 
-        <?php if ($tab === 'images' && $gallery_enabled): ?>
+
+        <?php if ($tab === "images" && $gallery_enabled): ?>
         <div class="card helper-card" id="shortcodeHelper">
             <div class="helper-header">
                 <h3>🖼️ Gallery Shortcode Helper</h3>
@@ -252,7 +264,6 @@ function format_size($bytes) {
             </div>
         </div>
         <?php endif; ?>
-    </div>
 
     <script>
     let selectedImages = [];
@@ -261,40 +272,40 @@ function format_size($bytes) {
         const index = selectedImages.indexOf(name);
         if (index === -1) {
             selectedImages.push(name);
-            el.classList.add('selected');
+            el.classList.add("selected");
         } else {
             selectedImages.splice(index, 1);
-            el.classList.remove('selected');
+            el.classList.remove("selected");
         }
         updateHelper();
     }
 
     function updateHelper() {
-        const countEl = document.getElementById('selectedCount');
-        const previewEl = document.getElementById('imagePreviewNames');
-        const outputEl = document.getElementById('shortcodeOutput');
+        const countEl = document.getElementById("selectedCount");
+        const previewEl = document.getElementById("imagePreviewNames");
+        const outputEl = document.getElementById("shortcodeOutput");
 
         if (countEl) countEl.innerText = `${selectedImages.length} selected`;
 
         if (selectedImages.length > 0) {
-            if (previewEl) previewEl.innerText = selectedImages.join(', ');
-            if (outputEl) outputEl.innerText = `[swiffy-gallery images="${selectedImages.join(', ')}"]`;
+            if (previewEl) previewEl.innerText = selectedImages.join(", ");
+            if (outputEl) outputEl.innerText = `[swiffy-gallery images="${selectedImages.join(", ")}"]`;
         } else {
-            if (previewEl) previewEl.innerText = 'No images selected.';
-            if (outputEl) outputEl.innerText = '[swiffy-gallery images=""]';
+            if (previewEl) previewEl.innerText = "No images selected.";
+            if (outputEl) outputEl.innerText = "[swiffy-gallery images=\"\"]";
         }
     }
 
     function clearSelection() {
         selectedImages = [];
-        document.querySelectorAll('.media-item.selected').forEach(el => el.classList.remove('selected'));
+        document.querySelectorAll(".media-item.selected").forEach(el => el.classList.remove("selected"));
         updateHelper();
     }
 
     function copyGalleryShortcode() {
-        const text = document.getElementById('shortcodeOutput').innerText;
+        const text = document.getElementById("shortcodeOutput").innerText;
         if (selectedImages.length === 0) {
-            alert('Please select at least one image first.');
+            alert("Please select at least one image first.");
             return;
         }
         copyText(text);
