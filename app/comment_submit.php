@@ -35,10 +35,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
 
             if (save_comment($post_slug, $comment_data)) {
-                redirect('../index.php?post=' . $post_slug . '&comment_success=1');
+                $redirect_url = $_SERVER['HTTP_REFERER'] ?? '../index.php?post=' . $post_slug;
+                // Ensure the redirect URL has the success param
+                $sep = (strpos($redirect_url, '?') !== false) ? '&' : '?';
+                if (strpos($redirect_url, 'comment_success') === false) {
+                    $redirect_url .= $sep . 'comment_success=1';
+                }
+                redirect($redirect_url);
             }
         }
     }
 }
 
-redirect('../index.php');
+redirect($_SERVER['HTTP_REFERER'] ?? '../index.php');

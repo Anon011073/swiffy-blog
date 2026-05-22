@@ -41,19 +41,19 @@
                     $avatar_url = '';
                     if ($config['use_gravatar'] ?? false) {
                         $email_hash = md5(strtolower(trim($config['admin_email'] ?? '')));
-                        $avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=100&d=mp";
+                        $avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=120&d=mp";
                     } elseif (!empty($config['admin_avatar'])) {
                         $avatar_url = "uploads/" . $config['admin_avatar'];
                     }
                     ?>
                     <?php if ($avatar_url): ?>
-                        <img src="<?php echo $avatar_url; ?>" alt="Author" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-purple);">
+                        <a href="index.php?page=profile"><img src="<?php echo $avatar_url; ?>" alt="Author" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-purple);"></a>
                     <?php else: ?>
-                        <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--accent-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 2rem;"><?php echo substr($admin_nickname, 0, 1); ?></div>
+                        <a href="index.php?page=profile" style="text-decoration: none;"><div style="width: 100px; height: 100px; border-radius: 50%; background: var(--accent-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 2rem;"><?php echo substr($admin_nickname, 0, 1); ?></div></a>
                     <?php endif; ?>
                 </div>
                 <div class="author-info" style="flex: 1;">
-                    <h4 style="margin: 0 0 10px 0; font-size: 1.3rem; color: var(--text-main); font-weight: 700;">Written by <?php echo htmlspecialchars($admin_nickname); ?></h4>
+                    <h4 style="margin: 0 0 10px 0; font-size: 1.3rem; color: var(--text-main); font-weight: 700;">Written by <a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($admin_nickname); ?></a></h4>
                     <p style="margin: 0; line-height: 1.6; color: var(--text-secondary); font-size: 1.05rem;"><?php echo nl2br(htmlspecialchars($config['admin_about_me'] ?? 'Welcome to my technical blog where I share insights on development and engineering.')); ?></p>
                 </div>
             </div>
@@ -93,9 +93,16 @@
                 if (!empty($comments)):
                     foreach ($comments as $comment):
                         if (!($comment['approved'] ?? false)) continue;
+                        $is_comment_admin = ($comment['nickname'] === $admin_nickname);
             ?>
                         <div class="comment" style="margin-bottom: var(--space-md); padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color);">
-                            <strong style="color: var(--accent-green); display: block; margin-bottom: 4px;"><?php echo htmlspecialchars($comment['nickname'] ?? 'Swiffyymous'); ?></strong>
+                            <strong style="color: var(--accent-green); display: block; margin-bottom: 4px;">
+                                <?php if ($is_comment_admin): ?>
+                                    <a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($comment['nickname']); ?></a>
+                                <?php else: ?>
+                                    <?php echo htmlspecialchars($comment['nickname'] ?? 'Swiffyymous'); ?>
+                                <?php endif; ?>
+                            </strong>
                             <div style="color: var(--text-secondary); font-size: 1rem;"><?php echo nl2br(htmlspecialchars($comment['content'] ?? '')); ?></div>
                         </div>
             <?php
@@ -114,7 +121,7 @@
                     <input type="hidden" name="post_slug" value="<?php echo htmlspecialchars($post['slug']); ?>">
                     <div style="display: grid; gap: 16px;">
                         <?php if ($is_admin): ?>
-                            <p style="color: var(--text-main); margin-bottom: 8px;">Posting as <strong><?php echo htmlspecialchars($admin_nickname); ?></strong></p>
+                            <p style="color: var(--text-main); margin-bottom: 8px;">Posting as <strong><a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($admin_nickname); ?></a></strong></p>
                             <input type="hidden" name="nickname" value="<?php echo htmlspecialchars($admin_nickname); ?>">
                         <?php else: ?>
                             <input type="text" name="nickname" placeholder="Your Name" required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; border-radius: 10px; font-family: inherit;">

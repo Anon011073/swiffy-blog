@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $avatar_url = '';
 if ($config['use_gravatar'] ?? false) {
     $email_hash = md5(strtolower(trim($config['admin_email'] ?? '')));
-    $avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=150&d=mp";
+    $avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=240&d=mp";
 } elseif (!empty($config['admin_avatar'])) {
     $avatar_url = "../uploads/" . $config['admin_avatar'];
 }

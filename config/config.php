@@ -46,6 +46,7 @@ return array (
     7 => 'swiffy-fast-cache',
     8 => 'swiffy-sitemap',
     9 => 'swiffy-contact',
+    10 => 'swiffy-profile',
   ),
   'menu' => 
   array (

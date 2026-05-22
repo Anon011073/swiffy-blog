@@ -10,13 +10,13 @@ if (isset($_SESSION['swiffy_user'])) {
 }
 $is_admin = isset($_SESSION['admin_logged_in']);
 
-$avatar_url = '';
+$nav_avatar_url = '';
 if ($is_admin) {
     if ($config['use_gravatar'] ?? false) {
         $email_hash = md5(strtolower(trim($config['admin_email'] ?? '')));
-        $avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=32&d=mp";
+        $nav_avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=64&d=mp";
     } elseif (!empty($config['admin_avatar'])) {
-        $avatar_url = $admin_base . "../uploads/" . $config['admin_avatar'];
+        $nav_avatar_url = $admin_base . "../uploads/" . $config['admin_avatar'];
     }
 }
 ?>
@@ -28,8 +28,8 @@ if ($is_admin) {
         <a href="<?php echo $admin_base; ?>help.php" style="color: #fff; text-decoration: none;">❓ Help</a>
         <?php if ($is_admin): ?>
             <a href="<?php echo $admin_base; ?>profile.php" style="color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                <?php if ($avatar_url): ?>
-                    <img src="<?php echo $avatar_url; ?>" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
+                <?php if ($nav_avatar_url): ?>
+                    <img src="<?php echo $nav_avatar_url; ?>" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
                 <?php else: ?>
                     👤
                 <?php endif; ?>

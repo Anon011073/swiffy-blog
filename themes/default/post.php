@@ -28,17 +28,17 @@ $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] 
         $avatar_url = '';
         if ($config['use_gravatar'] ?? false) {
             $email_hash = md5(strtolower(trim($config['admin_email'] ?? '')));
-            $avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=100&d=mp";
+            $avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=120&d=mp";
         } elseif (!empty($config['admin_avatar'])) {
             $avatar_url = "uploads/" . $config['admin_avatar'];
         }
         ?>
         <?php if ($avatar_url): ?>
-            <img src="<?php echo $avatar_url; ?>" alt="<?php echo htmlspecialchars($admin_nickname); ?>" class="author-avatar">
+            <a href="index.php?page=profile"><img src="<?php echo $avatar_url; ?>" alt="<?php echo htmlspecialchars($admin_nickname); ?>" class="author-avatar"></a>
         <?php endif; ?>
         <div class="author-info">
             <span class="written-by">Written by</span>
-            <span class="author-name"><?php echo htmlspecialchars($admin_nickname); ?></span>
+            <span class="author-name"><a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($admin_nickname); ?></a></span>
             <?php if (!empty($config['admin_about_me'])): ?>
                 <p class="author-bio"><?php echo nl2br(htmlspecialchars($config['admin_about_me'])); ?></p>
             <?php endif; ?>
@@ -76,10 +76,17 @@ $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] 
                 if (!empty($comments)):
                     foreach ($comments as $comment):
                         if (!($comment['approved'] ?? false)) continue;
+                        $is_comment_admin = ($comment['nickname'] === $admin_nickname);
             ?>
                         <div class="comment">
                             <div class="comment-header">
-                                <strong><?php echo htmlspecialchars($comment['nickname']); ?></strong>
+                                <strong>
+                                    <?php if ($is_comment_admin): ?>
+                                        <a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($comment['nickname']); ?></a>
+                                    <?php else: ?>
+                                        <?php echo htmlspecialchars($comment['nickname']); ?>
+                                    <?php endif; ?>
+                                </strong>
                                 <span class="comment-date"><?php echo format_date($comment['date']); ?></span>
                             </div>
                             <div class="comment-body">
@@ -97,7 +104,7 @@ $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] 
                 <form action="app/comment_submit.php" method="POST" class="comment-form">
                     <input type="hidden" name="post_slug" value="<?php echo htmlspecialchars($post['slug']); ?>">
                     <?php if ($is_admin): ?>
-                        <p style="margin-bottom: 1rem;">Posting as <strong><?php echo htmlspecialchars($admin_nickname); ?></strong></p>
+                        <p style="margin-bottom: 1rem;">Posting as <strong><a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($admin_nickname); ?></a></strong></p>
                         <input type="hidden" name="nickname" value="<?php echo htmlspecialchars($admin_nickname); ?>">
                     <?php else: ?>
                         <div class="form-group">
