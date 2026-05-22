@@ -6,10 +6,9 @@ return [
     'name' => 'Default',
     'description' => 'The standard Swiffy Blog theme, clean and powerful.',
     'author' => 'Swiffy Blog Team',
-    'version' => '1.4.0',
+    'version' => '1.4.1',
     'sections' => [
         'general' => 'General Settings',
-        'layout' => 'Layout & Structure',
         'typography' => 'Typography',
         'colors' => 'Colors & Styles',
         'advanced' => 'Advanced'
@@ -19,7 +18,7 @@ return [
             'name' => 'front_page_template',
             'label' => 'Front Page Layout',
             'type' => 'select',
-            'section' => 'layout',
+            'section' => 'general',
             'options' => [
                 'default' => 'Standard (1 Col + Sidebar)',
                 'grid_sidebar' => 'Grid (2 Col + Sidebar)',
@@ -31,7 +30,7 @@ return [
             'name' => 'featured_image_position',
             'label' => 'Index Featured Image Position',
             'type' => 'select',
-            'section' => 'layout',
+            'section' => 'general',
             'options' => [
                 'left' => 'Left of Content (Thumbnail)',
                 'top' => 'Above Title (Full Width)'
@@ -42,7 +41,7 @@ return [
             'name' => 'single_post_sidebar',
             'label' => 'Show Sidebar on Single Post/Page',
             'type' => 'select',
-            'section' => 'layout',
+            'section' => 'general',
             'options' => [
                 'yes' => 'Yes',
                 'no' => 'No'
@@ -50,31 +49,17 @@ return [
             'default' => 'yes'
         ],
         [
-            'name' => 'header_sticky',
-            'label' => 'Sticky Header',
-            'type' => 'checkbox',
-            'section' => 'layout',
-            'default' => false
-        ],
-        [
-            'name' => 'header_blur',
-            'label' => 'Glassmorphism Header (Blur)',
-            'type' => 'checkbox',
-            'section' => 'layout',
-            'default' => false
-        ],
-        [
             'name' => 'container_width',
             'label' => 'Site Max-Width (px)',
             'type' => 'number',
-            'section' => 'layout',
+            'section' => 'general',
             'default' => 1100
         ],
         [
             'name' => 'sidebar_width',
             'label' => 'Sidebar Width (px)',
             'type' => 'number',
-            'section' => 'layout',
+            'section' => 'general',
             'default' => 300
         ],
         [
@@ -146,6 +131,20 @@ return [
             'type' => 'color',
             'section' => 'colors',
             'default' => '#007bff'
+        ],
+        [
+            'name' => 'header_sticky',
+            'label' => 'Sticky Header',
+            'type' => 'checkbox',
+            'section' => 'advanced',
+            'default' => false
+        ],
+        [
+            'name' => 'header_blur',
+            'label' => 'Glassmorphism Header (Blur)',
+            'type' => 'checkbox',
+            'section' => 'advanced',
+            'default' => false
         ],
         [
             'name' => 'custom_css',

@@ -114,8 +114,14 @@ $active_tab = array_key_first($sections);
                         ?>
                             <div class="form-group">
                                 <label><?php echo $opt['label']; ?></label>
-                                <?php if ($opt['type'] === 'text' || $opt['type'] === 'number'): ?>
+                                                                <?php if ($opt['type'] === 'text' || $opt['type'] === 'number'): ?>
                                     <input type="<?php echo $opt['type']; ?>" name="<?php echo $name; ?>" value="<?php echo htmlspecialchars($val); ?>">
+                                <?php elseif ($opt['type'] === 'select'): ?>
+                                    <select name="<?php echo $name; ?>">
+                                        <?php foreach ($opt['options'] as $o_val => $o_label): ?>
+                                            <option value="<?php echo $o_val; ?>" <?php echo $val === $o_val ? 'selected' : ''; ?>><?php echo $o_label; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 <?php elseif ($opt['type'] === 'font'): ?>
                                     <select name="<?php echo $name; ?>">
                                         <?php foreach ($google_fonts as $font): ?>
