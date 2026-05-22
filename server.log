@@ -1,0 +1,109 @@
+[Fri May 22 03:37:47 2026] PHP 8.3.6 Development Server (http://localhost:8000) started
+[Fri May 22 03:39:39 2026] [::1]:48458 Accepted
+[Fri May 22 03:39:39 2026] [::1]:48458 [200]: GET /bypass_auth.php
+[Fri May 22 03:39:39 2026] [::1]:48458 Closing
+[Fri May 22 03:39:40 2026] [::1]:48474 Accepted
+[Fri May 22 03:39:40 2026] [::1]:48474 [200]: GET /admin/settings.php
+[Fri May 22 03:39:40 2026] [::1]:48474 Closing
+[Fri May 22 03:39:40 2026] [::1]:48478 Accepted
+[Fri May 22 03:39:40 2026] [::1]:48480 Accepted
+[Fri May 22 03:39:40 2026] [::1]:48478 [200]: GET /admin/style.css
+[Fri May 22 03:39:40 2026] [::1]:48480 [200]: GET /uploads/avatar_1777431177.jpg
+[Fri May 22 03:39:40 2026] [::1]:48478 Closing
+[Fri May 22 03:39:40 2026] [::1]:48480 Closing
+[Fri May 22 03:39:41 2026] [::1]:48484 Accepted
+[Fri May 22 03:39:41 2026] [::1]:48484 [200]: GET /admin/profile.php
+[Fri May 22 03:39:41 2026] [::1]:48484 Closing
+[Fri May 22 03:39:41 2026] [::1]:48488 Accepted
+[Fri May 22 03:39:41 2026] [::1]:48502 Accepted
+[Fri May 22 03:39:41 2026] [::1]:48488 [200]: GET /admin/style.css
+[Fri May 22 03:39:41 2026] [::1]:48502 [200]: GET /uploads/avatar_1777431177.jpg
+[Fri May 22 03:39:41 2026] [::1]:48488 Closing
+[Fri May 22 03:39:41 2026] [::1]:48502 Closing
+[Fri May 22 03:39:42 2026] [::1]:48506 Accepted
+[Fri May 22 03:39:42 2026] [::1]:48506 [200]: GET /index.php
+[Fri May 22 03:39:42 2026] [::1]:48506 Closing
+[Fri May 22 03:39:42 2026] [::1]:48508 Accepted
+[Fri May 22 03:39:42 2026] [::1]:48508 [200]: GET /themes/swiffy-x/style.css
+[Fri May 22 03:39:42 2026] [::1]:48508 Closing
+[Fri May 22 03:39:42 2026] [::1]:48514 Accepted
+[Fri May 22 03:39:42 2026] [::1]:48528 Accepted
+[Fri May 22 03:39:42 2026] [::1]:48536 Accepted
+[Fri May 22 03:39:42 2026] [::1]:48552 Accepted
+[Fri May 22 03:39:42 2026] [::1]:48562 Accepted
+[Fri May 22 03:39:42 2026] [::1]:48514 [200]: GET /uploads/_24c44a0c-b674-4c89-b04e-1c2a75349ab1.jpg
+[Fri May 22 03:39:42 2026] [::1]:48528 [200]: GET /uploads/_34b1f55a-ed04-46db-8550-334e3da2a9ab.jpg
+[Fri May 22 03:39:42 2026] [::1]:48536 [200]: GET /uploads/_66f294d4-6f92-4968-951f-96291d52dbac.jpg
+[Fri May 22 03:39:42 2026] [::1]:48552 [200]: GET /uploads/_975035d2-551e-46cc-9efd-77a28772833b.jpg
+[Fri May 22 03:39:42 2026] [::1]:48514 Closing
+[Fri May 22 03:39:42 2026] [::1]:48562 [200]: GET /uploads/_c01f3ff8-1e1c-4253-ad61-34610477a5dc.jpg
+[Fri May 22 03:39:42 2026] [::1]:48528 Closing
+[Fri May 22 03:39:42 2026] [::1]:48536 Closing
+[Fri May 22 03:39:42 2026] [::1]:48552 Closing
+[Fri May 22 03:39:42 2026] [::1]:48562 Closing
+[Fri May 22 03:39:43 2026] [::1]:48568 Accepted
+[Fri May 22 03:39:43 2026] [::1]:48568 [200]: GET /index.php?post=demo-post-author
+[Fri May 22 03:39:43 2026] [::1]:48568 Closing
+[Fri May 22 03:39:43 2026] [::1]:48580 Accepted
+[Fri May 22 03:39:43 2026] [::1]:48590 Accepted
+[Fri May 22 03:39:43 2026] [::1]:48580 [200]: GET /themes/swiffy-x/style.css
+[Fri May 22 03:39:43 2026] [::1]:48606 Accepted
+[Fri May 22 03:39:43 2026] [::1]:48590 [200]: GET /uploads/_24c44a0c-b674-4c89-b04e-1c2a75349ab1.jpg
+[Fri May 22 03:39:43 2026] [::1]:48606 [200]: GET /uploads/avatar_1777431177.jpg
+[Fri May 22 03:39:43 2026] [::1]:48580 Closing
+[Fri May 22 03:39:43 2026] [::1]:48590 Closing
+[Fri May 22 03:39:43 2026] [::1]:48606 Closing
+[Fri May 22 03:44:23 2026] [::1]:51810 Accepted
+[Fri May 22 03:44:23 2026] [::1]:51810 [200]: GET /bypass_auth.php
+[Fri May 22 03:44:23 2026] [::1]:51810 Closing
+[Fri May 22 03:44:23 2026] [::1]:51824 Accepted
+[Fri May 22 03:44:23 2026] [::1]:51824 [200]: GET /admin/settings.php
+[Fri May 22 03:44:23 2026] [::1]:51824 Closing
+[Fri May 22 03:44:23 2026] [::1]:51828 Accepted
+[Fri May 22 03:44:23 2026] [::1]:51840 Accepted
+[Fri May 22 03:44:23 2026] [::1]:51828 [200]: GET /admin/style.css
+[Fri May 22 03:44:23 2026] [::1]:51840 [200]: GET /uploads/avatar_1777431177.jpg
+[Fri May 22 03:44:23 2026] [::1]:51828 Closing
+[Fri May 22 03:44:23 2026] [::1]:51840 Closing
+[Fri May 22 03:44:24 2026] [::1]:51852 Accepted
+[Fri May 22 03:44:24 2026] [::1]:51852 [200]: GET /admin/profile.php
+[Fri May 22 03:44:24 2026] [::1]:51852 Closing
+[Fri May 22 03:44:24 2026] [::1]:51854 Accepted
+[Fri May 22 03:44:24 2026] [::1]:51856 Accepted
+[Fri May 22 03:44:24 2026] [::1]:51854 [200]: GET /admin/style.css
+[Fri May 22 03:44:24 2026] [::1]:51856 [200]: GET /uploads/avatar_1777431177.jpg
+[Fri May 22 03:44:24 2026] [::1]:51854 Closing
+[Fri May 22 03:44:24 2026] [::1]:51856 Closing
+[Fri May 22 03:44:25 2026] [::1]:38688 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38688 [200]: GET /index.php
+[Fri May 22 03:44:25 2026] [::1]:38688 Closing
+[Fri May 22 03:44:25 2026] [::1]:38690 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38690 [200]: GET /themes/swiffy-x/style.css
+[Fri May 22 03:44:25 2026] [::1]:38690 Closing
+[Fri May 22 03:44:25 2026] [::1]:38692 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38698 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38714 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38730 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38744 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38692 [200]: GET /uploads/_24c44a0c-b674-4c89-b04e-1c2a75349ab1.jpg
+[Fri May 22 03:44:25 2026] [::1]:38692 Closing
+[Fri May 22 03:44:25 2026] [::1]:38698 [200]: GET /uploads/_34b1f55a-ed04-46db-8550-334e3da2a9ab.jpg
+[Fri May 22 03:44:25 2026] [::1]:38698 Closing
+[Fri May 22 03:44:25 2026] [::1]:38714 [200]: GET /uploads/_66f294d4-6f92-4968-951f-96291d52dbac.jpg
+[Fri May 22 03:44:25 2026] [::1]:38730 [200]: GET /uploads/_975035d2-551e-46cc-9efd-77a28772833b.jpg
+[Fri May 22 03:44:25 2026] [::1]:38744 [200]: GET /uploads/_c01f3ff8-1e1c-4253-ad61-34610477a5dc.jpg
+[Fri May 22 03:44:25 2026] [::1]:38714 Closing
+[Fri May 22 03:44:25 2026] [::1]:38730 Closing
+[Fri May 22 03:44:25 2026] [::1]:38744 Closing
+[Fri May 22 03:44:25 2026] [::1]:38758 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38758 [200]: GET /index.php?post=demo-post-author
+[Fri May 22 03:44:25 2026] [::1]:38758 Closing
+[Fri May 22 03:44:25 2026] [::1]:38772 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38772 [200]: GET /themes/swiffy-x/style.css
+[Fri May 22 03:44:25 2026] [::1]:38772 Closing
+[Fri May 22 03:44:25 2026] [::1]:38786 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38790 Accepted
+[Fri May 22 03:44:25 2026] [::1]:38786 [200]: GET /uploads/_24c44a0c-b674-4c89-b04e-1c2a75349ab1.jpg
+[Fri May 22 03:44:25 2026] [::1]:38790 [200]: GET /uploads/avatar_1777431177.jpg
+[Fri May 22 03:44:25 2026] [::1]:38786 Closing
+[Fri May 22 03:44:25 2026] [::1]:38790 Closing

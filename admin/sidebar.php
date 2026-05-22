@@ -9,13 +9,33 @@ if (isset($_SESSION['swiffy_user'])) {
     $user_role = $_SESSION['swiffy_user']['role'] ?? 'Subscriber';
 }
 $is_admin = isset($_SESSION['admin_logged_in']);
+
+$avatar_url = '';
+if ($is_admin) {
+    if ($config['use_gravatar'] ?? false) {
+        $email_hash = md5(strtolower(trim($config['admin_email'] ?? '')));
+        $avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=32&d=mp";
+    } elseif (!empty($config['admin_avatar'])) {
+        $avatar_url = $admin_base . "../uploads/" . $config['admin_avatar'];
+    }
+}
 ?>
 <div style="height: 50px; background: #000; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; font-family: sans-serif;">
     <div style="font-weight: bold;"><?php echo htmlspecialchars($config['site_name'] ?? 'Swiffy Blog'); ?> Admin</div>
-    <div style="display: flex; gap: 20px; font-size: 0.9rem;">
+    <div style="display: flex; gap: 20px; font-size: 0.9rem; align-items: center;">
         <a href="<?php echo $admin_base; ?>../index.php" target="_blank" style="color: #fff; text-decoration: none;">🌐 View Site</a>
         <a href="<?php echo $admin_base; ?>backup.php" style="color: #fff; text-decoration: none;">💾 Backup</a>
         <a href="<?php echo $admin_base; ?>help.php" style="color: #fff; text-decoration: none;">❓ Help</a>
+        <?php if ($is_admin): ?>
+            <a href="<?php echo $admin_base; ?>profile.php" style="color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <?php if ($avatar_url): ?>
+                    <img src="<?php echo $avatar_url; ?>" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
+                <?php else: ?>
+                    👤
+                <?php endif; ?>
+                Profile
+            </a>
+        <?php endif; ?>
         <a href="<?php echo $admin_base; ?>logout.php" style="color: #fff; text-decoration: none;">🚪 Logout</a>
     </div>
 </div>

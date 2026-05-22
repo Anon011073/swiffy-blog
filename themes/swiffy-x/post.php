@@ -3,6 +3,8 @@
 <div class="container article-container">
     <?php
     $opts = $config['theme_options'] ?? [];
+    $is_admin = isset($_SESSION['admin_logged_in']);
+    $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] : ($config['admin_user'] ?? 'Admin');
     ?>
     <article class="post-full">
         <header>
@@ -35,14 +37,23 @@
         <?php if ($config['show_author_bio'] ?? true): ?>
             <div class="author-bio-box" style="margin-top: 60px; padding: 40px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; display: flex; gap: 30px; align-items: center;">
                 <div class="author-avatar">
-                    <?php if (!empty($config['admin_avatar'])): ?>
-                        <img src="uploads/<?php echo htmlspecialchars($config['admin_avatar']); ?>" alt="Author" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-purple);">
+                    <?php
+                    $avatar_url = '';
+                    if ($config['use_gravatar'] ?? false) {
+                        $email_hash = md5(strtolower(trim($config['admin_email'] ?? '')));
+                        $avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=100&d=mp";
+                    } elseif (!empty($config['admin_avatar'])) {
+                        $avatar_url = "uploads/" . $config['admin_avatar'];
+                    }
+                    ?>
+                    <?php if ($avatar_url): ?>
+                        <img src="<?php echo $avatar_url; ?>" alt="Author" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-purple);">
                     <?php else: ?>
-                        <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--accent-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 2rem;"><?php echo substr($config['admin_nickname'] ?? 'A', 0, 1); ?></div>
+                        <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--accent-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 2rem;"><?php echo substr($admin_nickname, 0, 1); ?></div>
                     <?php endif; ?>
                 </div>
                 <div class="author-info" style="flex: 1;">
-                    <h4 style="margin: 0 0 10px 0; font-size: 1.3rem; color: var(--text-main); font-weight: 700;">Written by <?php echo htmlspecialchars($config['admin_nickname'] ?? 'Admin'); ?></h4>
+                    <h4 style="margin: 0 0 10px 0; font-size: 1.3rem; color: var(--text-main); font-weight: 700;">Written by <?php echo htmlspecialchars($admin_nickname); ?></h4>
                     <p style="margin: 0; line-height: 1.6; color: var(--text-secondary); font-size: 1.05rem;"><?php echo nl2br(htmlspecialchars($config['admin_about_me'] ?? 'Welcome to my technical blog where I share insights on development and engineering.')); ?></p>
                 </div>
             </div>
@@ -71,6 +82,9 @@
         <?php else:
             $comments_enabled = $config['comments_enabled'] ?? true;
             if ($comments_enabled):
+                if (file_exists(__DIR__ . '/../../app/comments.php')) {
+                    require_once __DIR__ . '/../../app/comments.php';
+                }
                 $comments = [];
                 if (function_exists('get_comments')) {
                     $comments = get_comments($post['slug']);
@@ -99,7 +113,12 @@
                 <form action="app/comment_submit.php" method="POST" style="margin-top: var(--space-lg);">
                     <input type="hidden" name="post_slug" value="<?php echo htmlspecialchars($post['slug']); ?>">
                     <div style="display: grid; gap: 16px;">
-                        <input type="text" name="nickname" placeholder="Your Name" required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; border-radius: 10px; font-family: inherit;">
+                        <?php if ($is_admin): ?>
+                            <p style="color: var(--text-main); margin-bottom: 8px;">Posting as <strong><?php echo htmlspecialchars($admin_nickname); ?></strong></p>
+                            <input type="hidden" name="nickname" value="<?php echo htmlspecialchars($admin_nickname); ?>">
+                        <?php else: ?>
+                            <input type="text" name="nickname" placeholder="Your Name" required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; border-radius: 10px; font-family: inherit;">
+                        <?php endif; ?>
                         <textarea name="content" placeholder="Join the discussion..." required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; min-height: 120px; border-radius: 10px; font-family: inherit; resize: vertical;"></textarea>
                         <div>
                             <button type="submit" style="background: var(--accent-purple); color: white; border: none; padding: 12px 32px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: opacity 0.3s ease;">Post Comment</button>

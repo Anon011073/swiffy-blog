@@ -1,7 +1,9 @@
 <?php $include_part('header'); ?>
 
 <?php
-$img_pos = $config['featured_image_position'] ?? 'top';
+$img_pos = $post['featured_image_position'] ?? 'top';
+$is_admin = isset($_SESSION['admin_logged_in']);
+$admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] : ($config['admin_user'] ?? 'Admin');
 ?>
 
 <article class="post-full">
@@ -20,15 +22,29 @@ $img_pos = $config['featured_image_position'] ?? 'top';
         <?php echo markdown_to_html($post['content']); ?>
     </div>
 
+    <?php if ($config['show_author_bio'] ?? true): ?>
     <div class="post-author">
-        <?php if (!empty($config['admin_avatar'])): ?>
-            <img src="uploads/<?php echo htmlspecialchars($config['admin_avatar']); ?>" alt="<?php echo htmlspecialchars($config['admin_nickname'] ?? 'Admin'); ?>" class="author-avatar">
+        <?php
+        $avatar_url = '';
+        if ($config['use_gravatar'] ?? false) {
+            $email_hash = md5(strtolower(trim($config['admin_email'] ?? '')));
+            $avatar_url = "https://www.gravatar.com/avatar/$email_hash?s=100&d=mp";
+        } elseif (!empty($config['admin_avatar'])) {
+            $avatar_url = "uploads/" . $config['admin_avatar'];
+        }
+        ?>
+        <?php if ($avatar_url): ?>
+            <img src="<?php echo $avatar_url; ?>" alt="<?php echo htmlspecialchars($admin_nickname); ?>" class="author-avatar">
         <?php endif; ?>
         <div class="author-info">
             <span class="written-by">Written by</span>
-            <span class="author-name"><?php echo htmlspecialchars($config['admin_nickname'] ?? 'Admin'); ?></span>
+            <span class="author-name"><?php echo htmlspecialchars($admin_nickname); ?></span>
+            <?php if (!empty($config['admin_about_me'])): ?>
+                <p class="author-bio"><?php echo nl2br(htmlspecialchars($config['admin_about_me'])); ?></p>
+            <?php endif; ?>
         </div>
     </div>
+    <?php endif; ?>
 
     <section class="comments-section">
         <h3>Comments</h3>
@@ -80,10 +96,15 @@ $img_pos = $config['featured_image_position'] ?? 'top';
                 <h4>Leave a Comment</h4>
                 <form action="app/comment_submit.php" method="POST" class="comment-form">
                     <input type="hidden" name="post_slug" value="<?php echo htmlspecialchars($post['slug']); ?>">
-                    <div class="form-group">
-                        <label for="nickname">Nickname</label>
-                        <input type="text" id="nickname" name="nickname" required>
-                    </div>
+                    <?php if ($is_admin): ?>
+                        <p style="margin-bottom: 1rem;">Posting as <strong><?php echo htmlspecialchars($admin_nickname); ?></strong></p>
+                        <input type="hidden" name="nickname" value="<?php echo htmlspecialchars($admin_nickname); ?>">
+                    <?php else: ?>
+                        <div class="form-group">
+                            <label for="nickname">Nickname</label>
+                            <input type="text" id="nickname" name="nickname" required>
+                        </div>
+                    <?php endif; ?>
                     <div class="form-group">
                         <label for="comment_content">Comment</label>
                         <textarea id="comment_content" name="content" required></textarea>
