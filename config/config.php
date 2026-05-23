@@ -45,8 +45,8 @@ return array (
     6 => 'simple-gallery',
     7 => 'swiffy-fast-cache',
     8 => 'swiffy-sitemap',
-    9 => 'swiffy-contact',
-    10 => 'swiffy-profile',
+    9 => 'swiffy-profile',
+    10 => 'swiffy-contact',
   ),
   'menu' => 
   array (

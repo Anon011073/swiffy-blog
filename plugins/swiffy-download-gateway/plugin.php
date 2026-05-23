@@ -21,7 +21,7 @@ return [
     'name' => 'Swiffy Download Gateway',
     'version' => '1.1.0',
     'author' => 'Swiffy Team',
-    'settings_url' => 'settings.php?plugin=swiffy-download-gateway',
+    'settings_url' => '../plugins/swiffy-download-gateway/admin/settings.php',
     'hooks' => [
         'system_init' => function() {
             // Handle protected download requests
