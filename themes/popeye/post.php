@@ -46,7 +46,6 @@
                 $u_data = json_decode(file_get_contents($u_file), true);
                 $author_name = $u_data['nickname'];
                 $author_bio = $u_data['about_me'] ?? '';
-                // Avatar for users not implemented yet but could be
             }
         }
     ?>
@@ -59,5 +58,28 @@
     </div>
     <?php endif; ?>
 </article>
+
+<?php
+$post_comments_on = $post['comments_on'] ?? true;
+$commentics_enabled = $config['commentics_enabled'] ?? false;
+if (($config['comments_enabled'] ?? true) && $post_comments_on): ?>
+<section class="comments-section" style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
+    <h3>Comments</h3>
+    <?php
+    if ($commentics_enabled) {
+        $cmtx_identifier = $post['slug'];
+        $cmtx_reference = $post['title'];
+        $cmtx_path = $config['commentics_path'] ?? 'commentics/';
+        if (file_exists($cmtx_path . 'frontend/index.php')) {
+            include $cmtx_path . 'frontend/index.php';
+        } else {
+            echo "<p style='color:red;'>Commentics not found at: " . htmlspecialchars($cmtx_path) . "</p>";
+        }
+    } else {
+        echo "<p>Comments are enabled but native UI is coming soon. Switch to Commentics for full features.</p>";
+    }
+    ?>
+</section>
+<?php endif; ?>
 
 <?php $include_part('footer'); ?>

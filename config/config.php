@@ -23,6 +23,7 @@ return array (
     array (
       0 => 'search',
       1 => 'recent_posts',
+      2 => 'recent_comments',
     ),
     'footer1' => 
     array (
@@ -31,6 +32,12 @@ return array (
     array (
     ),
     'footer3' => 
+    array (
+    ),
+    'upper' =>
+    array (
+    ),
+    'lower' =>
     array (
     ),
   ),
@@ -139,4 +146,7 @@ return array (
   'comment_excerpt_length' => 50,
   'show_comment_avatar' => true,
   'show_comment_excerpt' => true,
+  'widget_links' =>
+  array (
+  ),
 );

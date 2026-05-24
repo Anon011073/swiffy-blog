@@ -49,10 +49,20 @@ $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] 
     <section class="comments-section">
         <h3>Comments</h3>
         <?php
-        $disqus_shortname = $config['disqus_shortname'] ?? '';
         $post_comments_on = $post['comments_on'] ?? true;
+        $commentics_enabled = $config['commentics_enabled'] ?? false;
+        $disqus_shortname = $config['disqus_shortname'] ?? '';
 
-        if ($disqus_shortname && $post_comments_on): ?>
+        if ($commentics_enabled && $post_comments_on):
+            $cmtx_identifier = $post['slug'];
+            $cmtx_reference = $post['title'];
+            $cmtx_path = $config['commentics_path'] ?? 'commentics/';
+            if (file_exists($cmtx_path . 'frontend/index.php')) {
+                include $cmtx_path . 'frontend/index.php';
+            } else {
+                echo "<p style='color:red;'>Commentics not found at: " . htmlspecialchars($cmtx_path) . "</p>";
+            }
+        elseif ($disqus_shortname && $post_comments_on): ?>
             <div id="disqus_thread"></div>
             <script>
                 var disqus_config = function () {
@@ -78,7 +88,7 @@ $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] 
                         if (!($comment['approved'] ?? false)) continue;
                         $is_comment_admin = ($comment['nickname'] === $admin_nickname);
             ?>
-                        <div class="comment" style="display: flex; gap: 15px; margin-bottom: 1.5rem;">
+                        <div class="comment" id="comment-<?php echo $comment["id"]; ?>" style="display: flex; gap: 15px; margin-bottom: 1.5rem;">
                             <?php
                             $c_email = $comment['email'] ?? '';
                             $c_avatar = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($c_email))) . "?s=48&d=mp";

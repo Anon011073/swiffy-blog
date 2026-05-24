@@ -50,6 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $show_author_bio = isset($_POST['show_author_bio']);
         $comments_enabled = isset($_POST['comments_enabled']);
         $disqus_shortname = sanitize($_POST['disqus_shortname'] ?? '');
+        $commentics_enabled = isset($_POST['commentics_enabled']);
+        $commentics_path = sanitize($_POST['commentics_path'] ?? 'commentics/');
+        $commentics_db_host = sanitize($_POST['commentics_db_host'] ?? 'localhost');
+        $commentics_db_name = sanitize($_POST['commentics_db_name'] ?? '');
+        $commentics_db_user = sanitize($_POST['commentics_db_user'] ?? '');
+        $commentics_db_pass = $_POST['commentics_db_pass'] ?? '';
+        $commentics_db_prefix = sanitize($_POST['commentics_db_prefix'] ?? 'cmtx_');
         $posts_per_page = (int)($_POST['posts_per_page'] ?? 5);
         $sidebar_position = $_POST['sidebar_position'] ?? 'right';
 
@@ -70,6 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_config['show_comment_avatar'] = isset($_POST['show_comment_avatar']);
         $new_config['show_comment_excerpt'] = isset($_POST['show_comment_excerpt']);
         $new_config['disqus_shortname'] = $disqus_shortname;
+        $new_config['commentics_enabled'] = $commentics_enabled;
+        $new_config['commentics_path'] = $commentics_path;
+        $new_config['commentics_db_host'] = $commentics_db_host;
+        $new_config['commentics_db_name'] = $commentics_db_name;
+        $new_config['commentics_db_user'] = $commentics_db_user;
+        $new_config['commentics_db_pass'] = $commentics_db_pass;
+        $new_config['commentics_db_prefix'] = $commentics_db_prefix;
         $new_config['posts_per_page'] = $posts_per_page;
         $new_config['sidebar_position'] = $sidebar_position;
 
@@ -100,6 +114,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <form method="POST">
         <input type="hidden" name="csrf_token" value="<?php echo get_csrf_token(); ?>">
+        <div class="card" style="border-top: 5px solid #22c55e;">
+            <h3>💬 Commentics Integration</h3>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">Integrate <a href="https://commentics.org" target="_blank">Commentics</a> for advanced moderation, anti-spam, and features.</p>
+
+            <label style="display: flex; align-items: center; cursor: pointer; font-weight:bold; margin-bottom: 15px;">
+                <input type="checkbox" name="commentics_enabled" <?php echo ($config["commentics_enabled"] ?? false) ? "checked" : ""; ?> style="margin-right: 10px;">
+                Enable Commentics (Overrides built-in/Disqus)
+            </label>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Commentics Folder Path</label>
+                    <input type="text" name="commentics_path" value="<?php echo htmlspecialchars($config["commentics_path"] ?? "commentics/"); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;" placeholder="e.g. commentics/">
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Database Prefix</label>
+                    <input type="text" name="commentics_db_prefix" value="<?php echo htmlspecialchars($config["commentics_db_prefix"] ?? "cmtx_"); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+                </div>
+            </div>
+
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 6px; border: 1px solid #eee;">
+                <h4 style="margin-top: 0; margin-bottom: 10px;">Database Connection</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-size: 0.85rem;">Host</label>
+                        <input type="text" name="commentics_db_host" value="<?php echo htmlspecialchars($config["commentics_db_host"] ?? "localhost"); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-size: 0.85rem;">Database Name</label>
+                        <input type="text" name="commentics_db_name" value="<?php echo htmlspecialchars($config["commentics_db_name"] ?? ""); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-size: 0.85rem;">Username</label>
+                        <input type="text" name="commentics_db_user" value="<?php echo htmlspecialchars($config["commentics_db_user"] ?? ""); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-size: 0.85rem;">Password</label>
+                        <input type="password" name="commentics_db_pass" value="<?php echo htmlspecialchars($config["commentics_db_pass"] ?? ""); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="card">
             <h3>🌐 Site Configuration</h3>
             <label style="display:block; margin-bottom:5px; font-weight:bold;">Site Name</label>

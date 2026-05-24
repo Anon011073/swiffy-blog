@@ -15,9 +15,25 @@
     ?>
 </article>
 
-<?php if ($config['comments_enabled'] ?? true): ?>
+<?php
+$post_comments_on = $post['comments_on'] ?? true;
+$commentics_enabled = $config['commentics_enabled'] ?? false;
+if (($config['comments_enabled'] ?? true) && $post_comments_on): ?>
     <section class="comments-section">
-        <?php include __DIR__ . '/../../app/comments.php'; ?>
+        <?php
+        if ($commentics_enabled) {
+            $cmtx_identifier = $post['slug'];
+            $cmtx_reference = $post['title'];
+            $cmtx_path = $config['commentics_path'] ?? 'commentics/';
+            if (file_exists($cmtx_path . 'frontend/index.php')) {
+                include $cmtx_path . 'frontend/index.php';
+            } else {
+                echo "<p style='color:red;'>Commentics not found at: " . htmlspecialchars($cmtx_path) . "</p>";
+            }
+        } else {
+            include __DIR__ . '/../../app/comments.php';
+        }
+        ?>
     </section>
 <?php endif; ?>
 

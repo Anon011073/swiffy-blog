@@ -1,18 +1,23 @@
 <?php $include_part('header'); ?>
 
-<div class="container article-container">
-    <?php
-    $opts = $config['theme_options'] ?? [];
-    $is_admin = isset($_SESSION['admin_logged_in']);
-    $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] : ($config['admin_user'] ?? 'Admin');
-    ?>
-    <article class="post-full">
-        <header>
-            <div class="post-meta">Build Update — <?php echo format_date($post['date']); ?></div>
-            <h1 class="post-title"><?php echo htmlspecialchars($post['title']); ?></h1>
+<?php
+$is_admin = isset($_SESSION['admin_logged_in']);
+$admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] : ($config['admin_user'] ?? 'Admin');
+?>
+
+<div class="sfx-container sfx-reading-mode">
+    <article class="sfx-post-full">
+        <header class="sfx-post-header">
+            <h1 class="sfx-post-title" style="font-size: <?php echo ($config['theme_options']['post_title_size'] ?? '3.5'); ?>rem;">
+                <?php echo htmlspecialchars($post['title']); ?>
+            </h1>
+
+            <div class="sfx-post-meta">
+                <span class="sfx-date"><?php echo strtoupper(format_date($post['date'])); ?></span>
+            </div>
 
             <?php
-            if ($opts['show_taxonomies'] ?? true) {
+            if ($config['theme_options']['show_taxonomies'] ?? true) {
                 render_swiffy_taxonomies($post);
             }
             ?>
@@ -64,8 +69,18 @@
     <section class="comments-section" style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--border-color);">
         <h3 style="margin-bottom: var(--space-md); font-size: 1.5rem;">Discussion</h3>
         <?php
+        $commentics_enabled = $config['commentics_enabled'] ?? false;
         $disqus_shortname = $config['disqus_shortname'] ?? '';
-        if ($disqus_shortname): ?>
+        if ($commentics_enabled):
+            $cmtx_identifier = $post['slug'];
+            $cmtx_reference = $post['title'];
+            $cmtx_path = $config['commentics_path'] ?? 'commentics/';
+            if (file_exists($cmtx_path . 'frontend/index.php')) {
+                include $cmtx_path . 'frontend/index.php';
+            } else {
+                echo "<p style='color:red;'>Commentics not found at: " . htmlspecialchars($cmtx_path) . "</p>";
+            }
+        elseif ($disqus_shortname): ?>
             <div id="disqus_thread"></div>
             <script>
                 var disqus_config = function () {
@@ -95,7 +110,7 @@
                         if (!($comment['approved'] ?? false)) continue;
                         $is_comment_admin = ($comment['nickname'] === $admin_nickname);
             ?>
-                        <div class="comment" style="margin-bottom: var(--space-md); padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 15px;">
+                        <div class="comment" id="comment-<?php echo $comment["id"]; ?>" style="margin-bottom: var(--space-md); padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 15px;">
                             <?php
                             $c_email = $comment['email'] ?? '';
                             $c_avatar = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($c_email))) . "?s=48&d=mp";
