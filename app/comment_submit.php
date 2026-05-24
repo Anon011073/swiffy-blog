@@ -15,13 +15,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($post_slug && $content) {
         $approved = false;
         $nickname = sanitize($_POST['nickname'] ?? '');
+        $email = sanitize($_POST['email'] ?? '');
 
         if (is_logged_in()) {
             $approved = true;
             $nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] : ($config['admin_user'] ?? 'Admin');
+            $email = $config['admin_email'] ?? '';
         } elseif (isset($_SESSION['swiffy_user'])) {
             $user = $_SESSION['swiffy_user'];
             $nickname = $user['nickname'] ?? $nickname;
+            $email = $user['email'] ?? $email;
             if ($user['auto_approve_comments'] ?? false) {
                 $approved = true;
             }
@@ -30,13 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($nickname) {
             $comment_data = [
                 'nickname' => $nickname,
+                'email' => $email,
                 'content' => $content,
                 'approved' => $approved
             ];
 
             if (save_comment($post_slug, $comment_data)) {
                 $redirect_url = $_SERVER['HTTP_REFERER'] ?? '../index.php?post=' . $post_slug;
-                // Ensure the redirect URL has the success param
                 $sep = (strpos($redirect_url, '?') !== false) ? '&' : '?';
                 if (strpos($redirect_url, 'comment_success') === false) {
                     $redirect_url .= $sep . 'comment_success=1';

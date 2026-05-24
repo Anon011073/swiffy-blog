@@ -63,6 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_config['back_to_top_size'] = $back_to_top_size;
         $new_config['show_author_bio'] = $show_author_bio;
         $new_config['comments_enabled'] = $comments_enabled;
+        $new_config['recent_comments_title'] = $_POST['recent_comments_title'] ?? 'Recent Comments';
+        $new_config['recent_comments_limit'] = (int)($_POST['recent_comments_limit'] ?? 3);
+        $new_config['comment_avatar_size'] = (int)($_POST['comment_avatar_size'] ?? 40);
+        $new_config['comment_excerpt_length'] = (int)($_POST['comment_excerpt_length'] ?? 50);
+        $new_config['show_comment_avatar'] = isset($_POST['show_comment_avatar']);
+        $new_config['show_comment_excerpt'] = isset($_POST['show_comment_excerpt']);
         $new_config['disqus_shortname'] = $disqus_shortname;
         $new_config['posts_per_page'] = $posts_per_page;
         $new_config['sidebar_position'] = $sidebar_position;
@@ -120,6 +126,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label style="display:block; margin-bottom:10px; font-weight:bold; cursor:pointer;">
                     <input type="checkbox" name="comments_enabled" <?php echo ($config['comments_enabled']??false)?'checked':''; ?>> Enable built-in comments
                 </label>
+                <div class="form-group" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                    <label>Recent Comments Widget Settings</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
+                        <div>
+                            <label style="font-size: 0.85rem; font-weight: normal;">Widget Title</label>
+                            <input type="text" name="recent_comments_title" value="<?php echo htmlspecialchars($config['recent_comments_title'] ?? 'Recent Comments'); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; font-weight: normal;">Limit (How many to show)</label>
+                            <input type="number" name="recent_comments_limit" value="<?php echo htmlspecialchars($config['recent_comments_limit'] ?? 3); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; font-weight: normal;">Avatar Size (px)</label>
+                            <input type="number" name="comment_avatar_size" value="<?php echo htmlspecialchars($config['comment_avatar_size'] ?? 40); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; font-weight: normal;">Excerpt Length (chars)</label>
+                            <input type="number" name="comment_excerpt_length" value="<?php echo htmlspecialchars($config['comment_excerpt_length'] ?? 50); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; display: flex; gap: 20px;">
+                        <label style="font-weight: 400; font-size: 0.85rem; cursor: pointer;">
+                            <input type="checkbox" name="show_comment_avatar" <?php echo ($config['show_comment_avatar'] ?? true) ? 'checked' : ''; ?>> Show Avatars
+                        </label>
+                        <label style="font-weight: 400; font-size: 0.85rem; cursor: pointer;">
+                            <input type="checkbox" name="show_comment_excerpt" <?php echo ($config['show_comment_excerpt'] ?? true) ? 'checked' : ''; ?>> Show Comment Excerpt
+                        </label>
+                    </div>
+                </div>
                 <label style="display:block; margin-bottom:10px; font-weight:bold; cursor:pointer;">
                     <input type="checkbox" name="show_author_bio" <?php echo ($config['show_author_bio'] ?? true) ? 'checked' : ''; ?>> Show Author Bio box on single post pages
                 </label>

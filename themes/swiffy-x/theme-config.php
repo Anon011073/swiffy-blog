@@ -25,9 +25,11 @@ return [
         ['name' => 'index_font', 'label' => 'Index Card Font', 'type' => 'font', 'default' => 'Inconsolata', 'section' => 'typo'],
         ['name' => 'excerpt_font', 'label' => 'Excerpt Font', 'type' => 'font', 'default' => 'Inconsolata', 'section' => 'typo'],
         ['name' => 'meta_font', 'label' => 'Small UI Meta Font', 'type' => 'font', 'default' => 'Inter', 'section' => 'typo'],
-        ['name' => 'site_title_size', 'label' => 'Site Title Size (rem)', 'type' => 'number', 'default' => '1.25', 'section' => 'typo'],
-        ['name' => 'post_title_size', 'label' => 'Post Title Size (rem)', 'type' => 'number', 'default' => '4.0', 'section' => 'typo'],
-        ['name' => 'body_text_size', 'label' => 'Body Text Size (rem)', 'type' => 'number', 'default' => '1.25', 'section' => 'typo'],
+        ['name' => 'site_title_separator', 'label' => 'Site Title Separator', 'type' => 'text', 'default' => '/', 'section' => 'typo'],
+        ['name' => 'site_title_suffix', 'label' => 'Site Title Suffix (e.g. Blog)', 'type' => 'text', 'default' => 'Blog', 'section' => 'typo'],
+        ['name' => 'site_title_size', 'label' => 'Site Title Size (px)', 'type' => 'number', 'default' => '30', 'section' => 'typo'],
+        ['name' => 'post_title_size', 'label' => 'Post Title Size (rem, e.g. 3.5)', 'type' => 'number', 'default' => '4.0', 'section' => 'typo'],
+        ['name' => 'body_text_size', 'label' => 'Body Text Size (rem, e.g. 1.25)', 'type' => 'number', 'default' => '1.25', 'section' => 'typo'],
 
         // Layout
         ['name' => 'reading_max_width', 'label' => 'Article Max Width (px)', 'type' => 'number', 'default' => 720, 'section' => 'layout'],

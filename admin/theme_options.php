@@ -115,7 +115,7 @@ $active_tab = array_key_first($sections);
                             <div class="form-group">
                                 <label><?php echo $opt['label']; ?></label>
                                                                 <?php if ($opt['type'] === 'text' || $opt['type'] === 'number'): ?>
-                                    <input type="<?php echo $opt['type']; ?>" name="<?php echo $name; ?>" value="<?php echo htmlspecialchars($val); ?>">
+                                    <input type="<?php echo $opt['type']; ?>" step="any" name="<?php echo $name; ?>" value="<?php echo htmlspecialchars($val); ?>">
                                 <?php elseif ($opt['type'] === 'select'): ?>
                                     <select name="<?php echo $name; ?>">
                                         <?php foreach ($opt['options'] as $o_val => $o_label): ?>

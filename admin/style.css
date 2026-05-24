@@ -21,7 +21,7 @@ body {
 }
 
 .main-content {
-    margin-left: 250px;
+    margin-left: 310px;
     margin-top: 50px;
     padding: 2rem;
 }
@@ -133,4 +133,39 @@ input:focus, textarea:focus, select:focus {
     background: #fff;
     color: var(--primary);
     border-color: var(--border-color);
+}
+
+/* Sidebar Consistency */
+.sidebar {
+    width: 280px !important; /* Slightly wider to match 310px margin-left */
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li {
+    margin-bottom: 2px !important;
+}
+
+.sidebar a {
+    color: #ccc;
+    text-decoration: none;
+    display: block;
+    padding: 12px 15px !important;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.sidebar a:hover {
+    background: #333;
+    color: #fff !important;
+}
+
+.sidebar a.active {
+    background: #444;
+    color: #fff !important;
+    font-weight: 600;
 }

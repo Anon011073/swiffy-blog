@@ -39,47 +39,47 @@ if ($is_admin) {
         <a href="<?php echo $admin_base; ?>logout.php" style="color: #fff; text-decoration: none;">🚪 Logout</a>
     </div>
 </div>
-<div class="sidebar" style="background: #222; width: 250px; flex-shrink: 0; color: #fff; padding: 1rem; position: fixed; top: 50px; left: 0; bottom: 0; z-index: 999; overflow-y: auto;">
+<div class="sidebar" style="background: #222;  flex-shrink: 0; color: #fff; padding: 1rem; position: fixed; top: 50px; left: 0; bottom: 0; z-index: 999; overflow-y: auto;">
     <ul style="list-style: none; padding: 0;">
         <?php if (has_permission('dashboard')): ?>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>index.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">Dashboard</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>index.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">Dashboard</a></li>
         <?php endif; ?>
 
         <?php if (has_permission('posts')): ?>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>posts.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'posts.php' || basename($_SERVER['PHP_SELF']) == 'post_edit.php' ? 'active' : ''; ?>">Posts</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>posts.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'posts.php' || basename($_SERVER['PHP_SELF']) == 'post_edit.php' ? 'active' : ''; ?>">Posts</a></li>
         <?php endif; ?>
 
         <?php if (has_permission('pages')): ?>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>pages.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'pages.php' || basename($_SERVER['PHP_SELF']) == 'page_edit.php' ? 'active' : ''; ?>">Pages</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>pages.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'pages.php' || basename($_SERVER['PHP_SELF']) == 'page_edit.php' ? 'active' : ''; ?>">Pages</a></li>
         <?php endif; ?>
 
         <?php if (has_permission('media')): ?>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>media.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'media.php' ? 'active' : ''; ?>">Media</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>media.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'media.php' ? 'active' : ''; ?>">Media</a></li>
         <?php endif; ?>
 
         <?php if (has_permission('comments')): ?>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>comments.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'comments.php' ? 'active' : ''; ?>">Comments</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>comments.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'comments.php' ? 'active' : ''; ?>">Comments</a></li>
         <?php endif; ?>
 
         <?php if ($is_admin): ?>
             <?php
             if (isset($config['enabled_plugins']) && in_array('swiffy-users', $config['enabled_plugins'])):
             ?>
-                <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>../plugins/swiffy-users/admin/manage.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo strpos($_SERVER['PHP_SELF'], 'swiffy-users/admin/manage.php') !== false ? 'active' : ''; ?>">Users</a></li>
+                <li style=""><a href="<?php echo $admin_base; ?>../plugins/swiffy-users/admin/manage.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo strpos($_SERVER['PHP_SELF'], 'swiffy-users/admin/manage.php') !== false ? 'active' : ''; ?>">Users</a></li>
             <?php endif; ?>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>settings.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">Settings</a></li>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>themes.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'themes.php' ? 'active' : ''; ?>">Themes</a></li>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>theme_options.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'theme_options.php' ? 'active' : ''; ?>">Theme Options</a></li>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>menu.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'menu.php' ? 'active' : ''; ?>">Menu</a></li>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>widgets.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'widgets.php' ? 'active' : ''; ?>">Widgets</a></li>
-            <li style="margin-bottom: 5px;"><a href="<?php echo $admin_base; ?>plugins.php" style="color: #ccc; text-decoration: none; display: block; padding: 10px; border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'plugins.php' ? 'active' : ''; ?>">Plugins</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>settings.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">Settings</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>themes.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'themes.php' ? 'active' : ''; ?>">Themes</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>theme_options.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'theme_options.php' ? 'active' : ''; ?>">Theme Options</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>menu.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'menu.php' ? 'active' : ''; ?>">Menu</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>widgets.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'widgets.php' ? 'active' : ''; ?>">Widgets</a></li>
+            <li style=""><a href="<?php echo $admin_base; ?>plugins.php" style="color: #ccc; text-decoration: none; display: block;  border-radius: 4px;" class="<?php echo basename($_SERVER['PHP_SELF']) == 'plugins.php' ? 'active' : ''; ?>">Plugins</a></li>
         <?php endif; ?>
     </ul>
     <style>
         .sidebar a.active { background: #444; color: #fff !important; }
         .sidebar a:hover { background: #333; color: #fff !important; }
     </style>
-    <div style="padding: 10px; font-size: 0.8rem; color: #666; border-top: 1px solid #333; margin-top: 20px;">
+    <div style=" font-size: 0.8rem; color: #666; border-top: 1px solid #333; margin-top: 20px;">
         Version: <?php echo SWIFFYBLOG_VERSION; ?>
     </div>
 </div>

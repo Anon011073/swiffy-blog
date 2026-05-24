@@ -95,7 +95,16 @@
                         if (!($comment['approved'] ?? false)) continue;
                         $is_comment_admin = ($comment['nickname'] === $admin_nickname);
             ?>
-                        <div class="comment" style="margin-bottom: var(--space-md); padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div class="comment" style="margin-bottom: var(--space-md); padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 15px;">
+                            <?php
+                            $c_email = $comment['email'] ?? '';
+                            $c_avatar = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($c_email))) . "?s=48&d=mp";
+                            if ($comment['nickname'] === $admin_nickname && !empty($config['admin_avatar'])) {
+                                $c_avatar = "uploads/" . $config['admin_avatar'];
+                            }
+                            ?>
+                            <img src="<?php echo $c_avatar; ?>" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex-shrink: 0;">
+                            <div style="flex: 1;">
                             <strong style="color: var(--accent-green); display: block; margin-bottom: 4px;">
                                 <?php if ($is_comment_admin): ?>
                                     <a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($comment['nickname']); ?></a>
@@ -104,6 +113,7 @@
                                 <?php endif; ?>
                             </strong>
                             <div style="color: var(--text-secondary); font-size: 1rem;"><?php echo nl2br(htmlspecialchars($comment['content'] ?? '')); ?></div>
+                            </div>
                         </div>
             <?php
                     endforeach;
@@ -124,7 +134,10 @@
                             <p style="color: var(--text-main); margin-bottom: 8px;">Posting as <strong><a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($admin_nickname); ?></a></strong></p>
                             <input type="hidden" name="nickname" value="<?php echo htmlspecialchars($admin_nickname); ?>">
                         <?php else: ?>
-                            <input type="text" name="nickname" placeholder="Your Name" required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; border-radius: 10px; font-family: inherit;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <input type="text" name="nickname" placeholder="Your Name" required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; border-radius: 10px; font-family: inherit;">
+                                <input type="email" name="email" placeholder="Email Address (Gravatar support)" required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; border-radius: 10px; font-family: inherit;">
+                            </div>
                         <?php endif; ?>
                         <textarea name="content" placeholder="Join the discussion..." required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; min-height: 120px; border-radius: 10px; font-family: inherit; resize: vertical;"></textarea>
                         <div>

@@ -11,7 +11,8 @@ $success = '';
 $available_widgets = [
     'search' => 'Search Bar',
     'recent_posts' => 'Recent Posts',
-    'links' => 'Custom Links'
+    'links' => 'Custom Links',
+    'recent_comments' => 'Recent Comments'
 ];
 
 $areas = ['sidebar', 'footer1', 'footer2', 'footer3', 'upper', 'lower'];
