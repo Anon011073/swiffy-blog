@@ -6,69 +6,72 @@ $show_excerpt = $config['show_comment_excerpt'] ?? true;
 $excerpt_length = $config['comment_excerpt_length'] ?? 50;
 $widget_title = $config['recent_comments_title'] ?? 'Recent Comments';
 
-$commentics_enabled = $config['commentics_enabled'] ?? false;
+$hashover_enabled = $config['hashover_enabled'] ?? true;
 $disqus_shortname = $config['disqus_shortname'] ?? '';
 
 echo '<div class="widget recent-comments-widget">';
 echo '<h3>' . htmlspecialchars($widget_title) . '</h3>';
 
-if ($commentics_enabled) {
-    // Commentics Integration
-    $db_host = $config['commentics_db_host'] ?? 'localhost';
-    $db_name = $config['commentics_db_name'] ?? '';
-    $db_user = $config['commentics_db_user'] ?? '';
-    $db_pass = $config['commentics_db_pass'] ?? '';
-    $db_prefix = $config['commentics_db_prefix'] ?? 'cmtx_';
-
-    try {
-        $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $sql = "SELECT c.id, c.name, c.comment, c.dated, p.identifier as post_slug
-                FROM {$db_prefix}comments c
-                JOIN {$db_prefix}pages p ON c.page_id = p.id
-                WHERE c.is_approved = 1
-                ORDER BY c.dated DESC
-                LIMIT " . (int)$comments_limit;
-
-        $stmt = $pdo->query($sql);
-        $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if (empty($recent)) {
-            echo '<p>No comments yet.</p>';
-        } else {
-            echo '<ul class="recent-comments-list">';
-            foreach ($recent as $c) {
-                $name = htmlspecialchars($c['name']);
-                $date = date('M d, Y', strtotime($c['dated']));
-                $url = "index.php?post=" . urlencode($c['post_slug']) . "#cmtx_comment_" . $c['id'];
-
-                echo '<li class="comment-item">';
-                echo '<div class="comment-meta">';
-                echo '<span class="comment-author">' . $name . '</span> on ';
-                echo '<a href="' . $url . '" class="comment-link">' . str_replace('-', ' ', $c['post_slug']) . '</a>';
-                echo '<br><small class="comment-date">' . $date . '</small>';
-
-                if ($show_excerpt) {
-                    $text = strip_tags($c['comment']);
-                    if (strlen($text) > $excerpt_length) {
-                        $text = substr($text, 0, $excerpt_length) . '...';
-                    }
-                    echo '<p class="comment-excerpt">' . htmlspecialchars($text) . '</p>';
-                }
-                echo '</div>';
-                echo '</li>';
-            }
-            echo '</ul>';
-        }
-    } catch (PDOException $e) {
-        echo '<p style="color:red; font-size:0.8rem; opacity:0.6;">Connection failed</p>';
-    }
-} elseif (!empty($disqus_shortname)) {
+if (!empty($disqus_shortname)) {
     echo '<div id="recentcomments" class="dsq-widget">';
     echo '<script type="text/javascript" src="https://' . htmlspecialchars($disqus_shortname) . '.disqus.com/recent_comments_widget.js?num_items=' . (int)$comments_limit . '&hide_avatars=' . ($show_avatar ? '0' : '1') . '&avatar_size=' . (int)$avatar_size . '"></script>';
     echo '</div>';
+} elseif ($hashover_enabled) {
+    $ho_path = $config['hashover_path'] ?? 'hashover/';
+    $sqlite_db = $ho_path . 'backend/databases/sqlite/comments.sqlite';
+
+    if (file_exists($sqlite_db)) {
+        try {
+            $db = new PDO("sqlite:" . $sqlite_db);
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $db->prepare("SELECT * FROM comments WHERE status = 'approved' ORDER BY date DESC LIMIT :limit");
+            $stmt->bindValue(':limit', (int)$comments_limit, PDO::PARAM_INT);
+            $stmt->execute();
+            $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($comments)) {
+                render_native_recent_comments($config, $comments_limit, $show_avatar, $avatar_size, $show_excerpt, $excerpt_length);
+            } else {
+                echo '<ul class="recent-comments-list">';
+                foreach ($comments as $c) {
+                    $name = htmlspecialchars($c['name'] ?? 'Anonymous');
+                    $date = date('M d, Y', strtotime($c['date'] ?? 'now'));
+                    $url = $c['permalink'] ?? '#';
+
+                    $avatar_url = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($c['email'] ?? ''))) . "?s=" . $avatar_size . "&d=mp";
+
+                    echo '<li class="comment-item">';
+                    if ($show_avatar) {
+                        echo '<img src="' . $avatar_url . '" width="' . $avatar_size . '" height="' . $avatar_size . '" class="comment-avatar">';
+                    }
+                    echo '<div class="comment-meta">';
+                    echo '<strong>' . $name . '</strong>';
+                    echo '<br><small>' . $date . '</small>';
+
+                    if ($show_excerpt) {
+                        $text = strip_tags($c['body'] ?? '');
+                        if (strlen($text) > $excerpt_length) {
+                            $text = substr($text, 0, $excerpt_length) . '...';
+                        }
+                        echo '<div class="comment-excerpt"><a href="' . $url . '" style="color: inherit; text-decoration: none;">' . htmlspecialchars($text) . '</a></div>';
+                    }
+                    echo '</div>';
+                    echo '</li>';
+                }
+                echo '</ul>';
+            }
+        } catch (Exception $e) {
+            render_native_recent_comments($config, $comments_limit, $show_avatar, $avatar_size, $show_excerpt, $excerpt_length);
+        }
+    } else {
+        render_native_recent_comments($config, $comments_limit, $show_avatar, $avatar_size, $show_excerpt, $excerpt_length);
+    }
 } else {
+    render_native_recent_comments($config, $comments_limit, $show_avatar, $avatar_size, $show_excerpt, $excerpt_length);
+}
+
+function render_native_recent_comments($config, $limit, $show_avatar, $avatar_size, $show_excerpt, $excerpt_length) {
     $all_comments = [];
     $comment_files = glob(__DIR__ . '/../../content/comments/*.json');
 
@@ -90,7 +93,7 @@ if ($commentics_enabled) {
         return strtotime($b['date'] ?? '') - strtotime($a['date'] ?? '');
     });
 
-    $recent = array_slice($all_comments, 0, $comments_limit);
+    $recent = array_slice($all_comments, 0, $limit);
 
     if (empty($recent)) {
         echo '<p>No comments yet.</p>';
@@ -113,16 +116,16 @@ if ($commentics_enabled) {
                 echo '<img src="' . $avatar_url . '" width="' . $avatar_size . '" height="' . $avatar_size . '" class="comment-avatar">';
             }
             echo '<div class="comment-meta">';
-            echo '<span class="comment-author">' . $name . '</span> on ';
-            echo '<a href="' . $url . '" class="comment-link">' . str_replace('-', ' ', $c['post_slug']) . '</a>';
-            echo '<br><small class="comment-date">' . $date . '</small>';
+            echo '<strong>' . $name . '</strong> on ';
+            echo '<a href="' . $url . '">' . str_replace('-', ' ', $c['post_slug']) . '</a>';
+            echo '<br><small>' . $date . '</small>';
 
             if ($show_excerpt) {
                 $text = strip_tags($c['content'] ?? '');
                 if (strlen($text) > $excerpt_length) {
                     $text = substr($text, 0, $excerpt_length) . '...';
                 }
-                echo '<p class="comment-excerpt">' . htmlspecialchars($text) . '</p>';
+                echo '<div class="comment-excerpt">' . htmlspecialchars($text) . '</div>';
             }
             echo '</div>';
             echo '</li>';
@@ -135,12 +138,9 @@ echo '</div>';
 
 <style>
 .recent-comments-list { list-style: none; padding: 0; margin: 0; }
-.comment-item { display: flex; gap: 12px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
+.comment-item { display: flex; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; }
 .comment-item:last-child { border-bottom: none; }
-.comment-avatar { border-radius: 50%; object-fit: cover; }
-.comment-author { font-weight: 700; color: var(--accent-purple); }
-.comment-link { color: #fff; text-decoration: none; opacity: 0.8; font-size: 0.9rem; }
-.comment-link:hover { opacity: 1; text-decoration: underline; }
-.comment-date { color: #888; font-size: 0.75rem; }
-.comment-excerpt { margin: 5px 0 0; font-size: 0.85rem; color: #ccc; line-height: 1.4; }
+.comment-avatar { border-radius: 4px; }
+.comment-meta { font-size: 0.9rem; }
+.comment-excerpt { margin-top: 4px; color: #666; font-style: italic; }
 </style>

@@ -3,6 +3,77 @@
 <?php
 $is_admin = isset($_SESSION['admin_logged_in']);
 $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] : ($config['admin_user'] ?? 'Admin');
+
+function render_native_comments_sfx($post, $config, $admin_nickname) {
+    $comments_enabled = $config['comments_enabled'] ?? true;
+    if (!$comments_enabled) return;
+
+    if (file_exists(__DIR__ . '/../../app/comments.php')) {
+        require_once __DIR__ . '/../../app/comments.php';
+    }
+    $comments = [];
+    if (function_exists('get_comments')) {
+        $comments = get_comments($post['slug']);
+    }
+    $is_admin = isset($_SESSION['admin_logged_in']);
+
+    if (!empty($comments)):
+        foreach ($comments as $comment):
+            if (!($comment['approved'] ?? false)) continue;
+            $is_comment_admin = ($comment['nickname'] === $admin_nickname);
+?>
+            <div class="comment" id="comment-<?php echo $comment['id']; ?>" style="margin-bottom: var(--space-md); padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 15px;">
+                <?php
+                $c_email = $comment['email'] ?? '';
+                $c_avatar = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($c_email))) . "?s=48&d=mp";
+                if ($comment['nickname'] === $admin_nickname && !empty($config['admin_avatar'])) {
+                    $c_avatar = "uploads/" . $config['admin_avatar'];
+                }
+                ?>
+                <img src="<?php echo $c_avatar; ?>" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex-shrink: 0;">
+                <div style="flex: 1;">
+                <strong style="color: var(--accent-green); display: block; margin-bottom: 4px;">
+                    <?php if ($is_comment_admin): ?>
+                        <a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($comment['nickname']); ?></a>
+                    <?php else: ?>
+                        <?php echo htmlspecialchars($comment['nickname'] ?? 'Swiffyymous'); ?>
+                    <?php endif; ?>
+                </strong>
+                <div style="color: var(--text-secondary); font-size: 1rem;"><?php echo nl2br(htmlspecialchars($comment['content'] ?? '')); ?></div>
+                </div>
+            </div>
+<?php
+        endforeach;
+    else: ?>
+        <p style="color: var(--text-muted); margin-bottom: var(--space-md); font-style: italic;">There are no comments yet. Be the first to join the discussion!</p>
+    <?php endif; ?>
+
+    <?php if (!empty($config['comment_rules'])): ?>
+        <div class="comment-rules" style="background: rgba(139, 92, 246, 0.05); border: 1px dashed var(--accent-purple); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; color: var(--text-secondary);">
+            <strong>Notice:</strong> <?php echo nl2br(htmlspecialchars($config['comment_rules'])); ?>
+        </div>
+    <?php endif; ?>
+
+    <form action="app/comment_submit.php" method="POST" style="margin-top: var(--space-lg);">
+        <input type="hidden" name="post_slug" value="<?php echo htmlspecialchars($post['slug']); ?>">
+        <div style="display: grid; gap: 16px;">
+            <?php if ($is_admin): ?>
+                <p style="color: var(--text-main); margin-bottom: 8px;">Posting as <strong><a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($admin_nickname); ?></a></strong></p>
+                <input type="hidden" name="nickname" value="<?php echo htmlspecialchars($admin_nickname); ?>">
+            <?php else: ?>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <input type="text" name="nickname" placeholder="Your Name" required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; border-radius: 10px; font-family: inherit;">
+                    <input type="email" name="email" placeholder="Email Address (Gravatar support)" required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; border-radius: 10px; font-family: inherit;">
+                </div>
+            <?php endif; ?>
+            <textarea name="content" placeholder="Join the discussion..." required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; min-height: 120px; border-radius: 10px; font-family: inherit; resize: vertical;"></textarea>
+            <div>
+                <button type="submit" style="background: var(--accent-purple); color: white; border: none; padding: 12px 32px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: opacity 0.3s ease;">Post Comment</button>
+            </div>
+        </div>
+    </form>
+<?php
+}
 ?>
 
 <div class="sfx-container sfx-reading-mode">
@@ -69,18 +140,10 @@ $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] 
     <section class="comments-section" style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--border-color);">
         <h3 style="margin-bottom: var(--space-md); font-size: 1.5rem;">Discussion</h3>
         <?php
-        $commentics_enabled = $config['commentics_enabled'] ?? false;
+        $hashover_enabled = $config['hashover_enabled'] ?? true;
         $disqus_shortname = $config['disqus_shortname'] ?? '';
-        if ($commentics_enabled):
-            $cmtx_identifier = $post['slug'];
-            $cmtx_reference = $post['title'];
-            $cmtx_path = $config['commentics_path'] ?? 'commentics/';
-            if (file_exists($cmtx_path . 'frontend/index.php')) {
-                include $cmtx_path . 'frontend/index.php';
-            } else {
-                echo "<p style='color:red;'>Commentics not found at: " . htmlspecialchars($cmtx_path) . "</p>";
-            }
-        elseif ($disqus_shortname): ?>
+
+        if ($disqus_shortname): ?>
             <div id="disqus_thread"></div>
             <script>
                 var disqus_config = function () {
@@ -94,73 +157,15 @@ $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] 
                     (d.head || d.body).appendChild(s);
                 })();
             </script>
-        <?php else:
-            $comments_enabled = $config['comments_enabled'] ?? true;
-            if ($comments_enabled):
-                if (file_exists(__DIR__ . '/../../app/comments.php')) {
-                    require_once __DIR__ . '/../../app/comments.php';
-                }
-                $comments = [];
-                if (function_exists('get_comments')) {
-                    $comments = get_comments($post['slug']);
-                }
-
-                if (!empty($comments)):
-                    foreach ($comments as $comment):
-                        if (!($comment['approved'] ?? false)) continue;
-                        $is_comment_admin = ($comment['nickname'] === $admin_nickname);
-            ?>
-                        <div class="comment" id="comment-<?php echo $comment["id"]; ?>" style="margin-bottom: var(--space-md); padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 15px;">
-                            <?php
-                            $c_email = $comment['email'] ?? '';
-                            $c_avatar = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($c_email))) . "?s=48&d=mp";
-                            if ($comment['nickname'] === $admin_nickname && !empty($config['admin_avatar'])) {
-                                $c_avatar = "uploads/" . $config['admin_avatar'];
-                            }
-                            ?>
-                            <img src="<?php echo $c_avatar; ?>" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex-shrink: 0;">
-                            <div style="flex: 1;">
-                            <strong style="color: var(--accent-green); display: block; margin-bottom: 4px;">
-                                <?php if ($is_comment_admin): ?>
-                                    <a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($comment['nickname']); ?></a>
-                                <?php else: ?>
-                                    <?php echo htmlspecialchars($comment['nickname'] ?? 'Swiffyymous'); ?>
-                                <?php endif; ?>
-                            </strong>
-                            <div style="color: var(--text-secondary); font-size: 1rem;"><?php echo nl2br(htmlspecialchars($comment['content'] ?? '')); ?></div>
-                            </div>
-                        </div>
-            <?php
-                    endforeach;
-                else: ?>
-                    <p style="color: var(--text-muted); margin-bottom: var(--space-md); font-style: italic;">There are no comments yet. Be the first to join the discussion!</p>
-                <?php endif; ?>
-
-                <?php if (!empty($config['comment_rules'])): ?>
-                    <div class="comment-rules" style="background: rgba(139, 92, 246, 0.05); border: 1px dashed var(--accent-purple); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; color: var(--text-secondary);">
-                        <strong>Notice:</strong> <?php echo nl2br(htmlspecialchars($config['comment_rules'])); ?>
-                    </div>
-                <?php endif; ?>
-
-                <form action="app/comment_submit.php" method="POST" style="margin-top: var(--space-lg);">
-                    <input type="hidden" name="post_slug" value="<?php echo htmlspecialchars($post['slug']); ?>">
-                    <div style="display: grid; gap: 16px;">
-                        <?php if ($is_admin): ?>
-                            <p style="color: var(--text-main); margin-bottom: 8px;">Posting as <strong><a href="index.php?page=profile" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($admin_nickname); ?></a></strong></p>
-                            <input type="hidden" name="nickname" value="<?php echo htmlspecialchars($admin_nickname); ?>">
-                        <?php else: ?>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                                <input type="text" name="nickname" placeholder="Your Name" required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; border-radius: 10px; font-family: inherit;">
-                                <input type="email" name="email" placeholder="Email Address (Gravatar support)" required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; border-radius: 10px; font-family: inherit;">
-                            </div>
-                        <?php endif; ?>
-                        <textarea name="content" placeholder="Join the discussion..." required style="display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; min-height: 120px; border-radius: 10px; font-family: inherit; resize: vertical;"></textarea>
-                        <div>
-                            <button type="submit" style="background: var(--accent-purple); color: white; border: none; padding: 12px 32px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: opacity 0.3s ease;">Post Comment</button>
-                        </div>
-                    </div>
-                </form>
-            <?php endif;
+        <?php elseif ($hashover_enabled):
+            $ho_path = $config['hashover_path'] ?? 'hashover/';
+            if (file_exists($ho_path . 'hashover.php')) {
+                include $ho_path . 'hashover.php';
+            } else {
+                render_native_comments_sfx($post, $config, $admin_nickname);
+            }
+        else:
+            render_native_comments_sfx($post, $config, $admin_nickname);
         endif; ?>
     </section>
     <?php endif; ?>

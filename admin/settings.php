@@ -18,6 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'posts_per_page' => 5,
             'sidebar_position' => 'right',
             'comments_enabled' => true,
+            'hashover_enabled' => true,
+            'hashover_path' => 'hashover/',
             'back_to_top_enabled' => true,
             'back_to_top_type' => 'icon',
             'back_to_top_color' => '#8b5cf6',
@@ -49,14 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $back_to_top_size = (int)($_POST['back_to_top_size'] ?? 40);
         $show_author_bio = isset($_POST['show_author_bio']);
         $comments_enabled = isset($_POST['comments_enabled']);
+        $hashover_enabled = isset($_POST['hashover_enabled']);
+        $hashover_path = sanitize($_POST['hashover_path'] ?? 'hashover/');
         $disqus_shortname = sanitize($_POST['disqus_shortname'] ?? '');
-        $commentics_enabled = isset($_POST['commentics_enabled']);
-        $commentics_path = sanitize($_POST['commentics_path'] ?? 'commentics/');
-        $commentics_db_host = sanitize($_POST['commentics_db_host'] ?? 'localhost');
-        $commentics_db_name = sanitize($_POST['commentics_db_name'] ?? '');
-        $commentics_db_user = sanitize($_POST['commentics_db_user'] ?? '');
-        $commentics_db_pass = $_POST['commentics_db_pass'] ?? '';
-        $commentics_db_prefix = sanitize($_POST['commentics_db_prefix'] ?? 'cmtx_');
         $posts_per_page = (int)($_POST['posts_per_page'] ?? 5);
         $sidebar_position = $_POST['sidebar_position'] ?? 'right';
 
@@ -70,6 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_config['back_to_top_size'] = $back_to_top_size;
         $new_config['show_author_bio'] = $show_author_bio;
         $new_config['comments_enabled'] = $comments_enabled;
+        $new_config['hashover_enabled'] = $hashover_enabled;
+        $new_config['hashover_path'] = $hashover_path;
         $new_config['recent_comments_title'] = $_POST['recent_comments_title'] ?? 'Recent Comments';
         $new_config['recent_comments_limit'] = (int)($_POST['recent_comments_limit'] ?? 3);
         $new_config['comment_avatar_size'] = (int)($_POST['comment_avatar_size'] ?? 40);
@@ -77,13 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_config['show_comment_avatar'] = isset($_POST['show_comment_avatar']);
         $new_config['show_comment_excerpt'] = isset($_POST['show_comment_excerpt']);
         $new_config['disqus_shortname'] = $disqus_shortname;
-        $new_config['commentics_enabled'] = $commentics_enabled;
-        $new_config['commentics_path'] = $commentics_path;
-        $new_config['commentics_db_host'] = $commentics_db_host;
-        $new_config['commentics_db_name'] = $commentics_db_name;
-        $new_config['commentics_db_user'] = $commentics_db_user;
-        $new_config['commentics_db_pass'] = $commentics_db_pass;
-        $new_config['commentics_db_prefix'] = $commentics_db_prefix;
         $new_config['posts_per_page'] = $posts_per_page;
         $new_config['sidebar_position'] = $sidebar_position;
 
@@ -114,49 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <form method="POST">
         <input type="hidden" name="csrf_token" value="<?php echo get_csrf_token(); ?>">
-        <div class="card" style="border-top: 5px solid #22c55e;">
-            <h3>💬 Commentics Integration</h3>
-            <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">Integrate <a href="https://commentics.org" target="_blank">Commentics</a> for advanced moderation, anti-spam, and features.</p>
-
-            <label style="display: flex; align-items: center; cursor: pointer; font-weight:bold; margin-bottom: 15px;">
-                <input type="checkbox" name="commentics_enabled" <?php echo ($config["commentics_enabled"] ?? false) ? "checked" : ""; ?> style="margin-right: 10px;">
-                Enable Commentics (Overrides built-in/Disqus)
-            </label>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
-                <div>
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Commentics Folder Path</label>
-                    <input type="text" name="commentics_path" value="<?php echo htmlspecialchars($config["commentics_path"] ?? "commentics/"); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;" placeholder="e.g. commentics/">
-                </div>
-                <div>
-                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Database Prefix</label>
-                    <input type="text" name="commentics_db_prefix" value="<?php echo htmlspecialchars($config["commentics_db_prefix"] ?? "cmtx_"); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
-                </div>
-            </div>
-
-            <div style="background: #f9f9f9; padding: 15px; border-radius: 6px; border: 1px solid #eee;">
-                <h4 style="margin-top: 0; margin-bottom: 10px;">Database Connection</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div>
-                        <label style="display:block; margin-bottom:5px; font-size: 0.85rem;">Host</label>
-                        <input type="text" name="commentics_db_host" value="<?php echo htmlspecialchars($config["commentics_db_host"] ?? "localhost"); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
-                    </div>
-                    <div>
-                        <label style="display:block; margin-bottom:5px; font-size: 0.85rem;">Database Name</label>
-                        <input type="text" name="commentics_db_name" value="<?php echo htmlspecialchars($config["commentics_db_name"] ?? ""); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
-                    </div>
-                    <div>
-                        <label style="display:block; margin-bottom:5px; font-size: 0.85rem;">Username</label>
-                        <input type="text" name="commentics_db_user" value="<?php echo htmlspecialchars($config["commentics_db_user"] ?? ""); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
-                    </div>
-                    <div>
-                        <label style="display:block; margin-bottom:5px; font-size: 0.85rem;">Password</label>
-                        <input type="password" name="commentics_db_pass" value="<?php echo htmlspecialchars($config["commentics_db_pass"] ?? ""); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
+                <div class="card">
             <h3>🌐 Site Configuration</h3>
             <label style="display:block; margin-bottom:5px; font-weight:bold;">Site Name</label>
             <input type="text" name="site_name" value="<?php echo htmlspecialchars($config['site_name']); ?>" required style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ddd; border-radius:4px;">
@@ -178,12 +128,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <div style="margin-top:20px;">
-                <label style="display:block; margin-bottom:10px; font-weight:bold; cursor:pointer;">
-                    <input type="checkbox" name="comments_enabled" <?php echo ($config['comments_enabled']??false)?'checked':''; ?>> Enable built-in comments
-                </label>
+            <div style="margin-top:20px; border-top: 1px solid #eee; padding-top: 20px;">
+                <h3>💬 Comment System</h3>
+                <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <label style="display:block; margin-bottom:10px; font-weight:bold; cursor:pointer;">
+                        <input type="checkbox" name="hashover_enabled" <?php echo ($config['hashover_enabled']??true)?'checked':''; ?>> Enable HashOver 2.0 (Recommended)
+                    </label>
+                    <div style="margin-bottom: 20px; padding-left: 25px;">
+                        <label style="display:block; margin-bottom:5px; font-size: 0.85rem;">HashOver Root Path</label>
+                        <input type="text" name="hashover_path" value="<?php echo htmlspecialchars($config['hashover_path'] ?? 'hashover/'); ?>" style="width:100%; max-width: 400px; padding:8px; border:1px solid #ddd; border-radius:4px;" placeholder="e.g. hashover/">
+                        <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">Must contain hashover.php. If not found, system falls back to native comments.</p>
+                    </div>
+
+                    <label style="display:block; margin-bottom:10px; font-weight:bold; cursor:pointer; border-top: 1px solid #ddd; padding-top: 15px;">
+                        <input type="checkbox" name="comments_enabled" <?php echo ($config['comments_enabled']??false)?'checked':''; ?>> Enable Native JSON Comments (Backup)
+                    </label>
+
+                    <div style="margin-top: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:bold;">Disqus Shortname (Override)</label>
+                        <input type="text" name="disqus_shortname" value="<?php echo htmlspecialchars($config['disqus_shortname'] ?? ''); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;" placeholder="e.g. my-blog-shortname">
+                        <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">If set, Disqus will be used instead of HashOver/Native.</p>
+                    </div>
+                </div>
+
                 <div class="form-group" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
-                    <label>Recent Comments Widget Settings</label>
+                    <label style="font-weight: bold;">Recent Comments Widget Settings</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
                         <div>
                             <label style="font-size: 0.85rem; font-weight: normal;">Widget Title</label>
@@ -211,13 +180,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </label>
                     </div>
                 </div>
-                <label style="display:block; margin-bottom:10px; font-weight:bold; cursor:pointer;">
-                    <input type="checkbox" name="show_author_bio" <?php echo ($config['show_author_bio'] ?? true) ? 'checked' : ''; ?>> Show Author Bio box on single post pages
-                </label>
-            </div>
 
-            <label style="display:block; margin-top:20px; margin-bottom:5px; font-weight:bold;">Disqus Shortname (Optional)</label>
-            <input type="text" name="disqus_shortname" value="<?php echo htmlspecialchars($config['disqus_shortname'] ?? ''); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;" placeholder="Leave blank to use native comments">
+                <div style="margin-top: 20px;">
+                    <label style="display:block; margin-bottom:10px; font-weight:bold; cursor:pointer;">
+                        <input type="checkbox" name="show_author_bio" <?php echo ($config['show_author_bio'] ?? true) ? 'checked' : ''; ?>> Show Author Bio box on single post pages
+                    </label>
+                </div>
+            </div>
         </div>
 
         <div class="card" style="border-top: 5px solid #8b5cf6;">
@@ -273,5 +242,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 </div>
+
 </body>
 </html>
