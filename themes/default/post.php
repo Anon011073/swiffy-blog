@@ -138,9 +138,14 @@ function render_native_comments($post, $config, $admin_nickname) {
                     })();
                 </script>
             <?php elseif ($hashover_enabled):
-                $ho_path = $config['hashover_path'] ?? 'hashover/';
-                if (file_exists($ho_path . 'hashover.php')) {
-                    include $ho_path . 'hashover.php';
+                $ho_path = rtrim($config['hashover_path'] ?? 'hashover/', '/');
+                $ho_v1 = $ho_path . '/hashover.php';
+                $ho_v2 = $ho_path . '/backend/classes/hashover.php';
+
+                if (file_exists($ho_v2)) {
+                    include $ho_v2;
+                } elseif (file_exists($ho_v1)) {
+                    include $ho_v1;
                 } else {
                     render_native_comments($post, $config, $admin_nickname);
                 }

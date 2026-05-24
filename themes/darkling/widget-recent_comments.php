@@ -17,8 +17,9 @@ if (!empty($disqus_shortname)) {
     echo '<script type="text/javascript" src="https://' . htmlspecialchars($disqus_shortname) . '.disqus.com/recent_comments_widget.js?num_items=' . (int)$comments_limit . '&hide_avatars=' . ($show_avatar ? '0' : '1') . '&avatar_size=' . (int)$avatar_size . '"></script>';
     echo '</div>';
 } elseif ($hashover_enabled) {
-    $ho_path = $config['hashover_path'] ?? 'hashover/';
-    $sqlite_db = $ho_path . 'backend/databases/sqlite/comments.sqlite';
+    $ho_path = rtrim($config['hashover_path'] ?? 'hashover/', '/');
+    // For Recent Comments we still check for SQLite which is usually in the backend/databases
+    $sqlite_db = $ho_path . '/backend/databases/sqlite/comments.sqlite';
 
     if (file_exists($sqlite_db)) {
         try {

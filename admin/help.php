@@ -12,13 +12,17 @@ $config = load_config();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help & Documentation - Swiffy Blog Admin</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body { font-family: sans-serif; margin: 0; display: flex; min-height: 100vh; background: #f4f4f4; }
-        .main-content { flex: 1; padding: 2rem; margin-left: 310px; margin-top: 50px; overflow-y: auto; }
-        .card { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); line-height: 1.6; }
-        code { background: #f8f9fa; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
-        pre { background: #222; color: #fff; padding: 15px; border-radius: 5px; overflow-x: auto; }
-        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 30px; }
+        .main-content { margin-left: 310px; margin-top: 50px; padding: 2rem; }
+        .card { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); line-height: 1.6; margin-bottom: 2rem; }
+        code { background: #f8f9fa; padding: 2px 5px; border-radius: 3px; font-family: monospace; color: #d63384; }
+        pre { background: #1a202c; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 15px 0; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 30px; color: var(--primary); }
+        .toc { background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 30px; }
+        .toc ul { list-style: none; padding: 0; display: flex; gap: 20px; }
+        .toc a { text-decoration: none; font-weight: 600; color: #475569; }
+        .toc a:hover { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -26,7 +30,33 @@ $config = load_config();
     <div class="main-content">
         <h1>Help & Documentation</h1>
 
-        <div class="card">
+        <div class="toc">
+            <ul>
+                <li><a href="#hashover">💬 HashOver Setup</a></li>
+                <li><a href="#plugins">🧩 Plugins</a></li>
+                <li><a href="#themes">🎨 Themes</a></li>
+                <li><a href="#shortcodes">📝 Shortcodes</a></li>
+            </ul>
+        </div>
+
+        <div class="card" id="hashover">
+            <h2>💬 Setting up HashOver 2.0</h2>
+            <p>Swiffy Blog recommends **HashOver 2.0** for a powerful, self-hosted, database-driven comment system (using SQLite).</p>
+
+            <p><strong>Step 1: Download & Extract</strong></p>
+            <p>Download HashOver 2.0 and extract the contents. You will get a folder (usually named <code>hashover-next</code> or <code>hashover</code>).</p>
+
+            <p><strong>Step 2: Placement</strong></p>
+            <p>Upload the entire HashOver folder to your blog's root directory. For example, if your blog is at <code>/public_html/</code>, your HashOver folder should be at <code>/public_html/hashover/</code>.</p>
+
+            <p><strong>Step 3: Configuration</strong></p>
+            <p>In your admin <strong>Settings</strong>, ensure the "HashOver Root Path" matches your folder name (default is <code>hashover/</code>). The system will automatically detect the version.</p>
+
+            <p><strong>Note for Version 2.0 Users:</strong></p>
+            <p>The system looks for the file at <code>[path]/backend/classes/hashover.php</code>. If you renamed your folders, ensure the structure remains standard.</p>
+        </div>
+
+        <div class="card" id="plugins">
             <h2>🧩 Creating a Plugin</h2>
             <p>Plugins are stored in the <code>/plugins</code> directory. A plugin must have a <code>plugin.php</code> file that returns an array of metadata and hooks.</p>
             <pre>
@@ -48,7 +78,9 @@ return [
                 <li><code>markdown_pre</code>: Runs before markdown is converted to HTML.</li>
                 <li><code>render_content</code>: Runs after HTML generation. Use for shortcodes.</li>
             </ul>
+        </div>
 
+        <div class="card" id="themes">
             <h2>🎨 Creating a Theme</h2>
             <p>Themes are stored in <code>/themes</code>. A theme folder should contain:</p>
             <ul>
@@ -66,6 +98,15 @@ return [
     ]
 ];
 ?&gt;</pre>
+        </div>
+
+        <div class="card" id="shortcodes">
+            <h2>📝 Standard Shortcodes</h2>
+            <ul>
+                <li><code>[youtube]https://youtube.com/watch?v=...[/youtube]</code>: Embed a YouTube video.</li>
+                <li><code>[swiffy-gallery images="img1.jpg, img2.jpg"]</code>: Display an image gallery.</li>
+                <li><code>[sfx-download file="file.zip" label="Download Now"]</code>: Create a secure download button.</li>
+            </ul>
         </div>
     </div>
 </body>

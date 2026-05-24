@@ -9,6 +9,21 @@ $error = '';
 $success = '';
 $uploads_dir = __DIR__ . '/../uploads/';
 
+// HashOver Detection Logic
+$ho_path = rtrim($config['hashover_path'] ?? 'hashover/', '/');
+$ho_v1 = $ho_path . '/hashover.php';
+$ho_v2 = $ho_path . '/backend/classes/hashover.php';
+$ho_status = '🔴 Not Found';
+$ho_detected_path = '';
+
+if (file_exists(__DIR__ . '/../' . $ho_v2)) {
+    $ho_status = '🟢 Detected (v2.0)';
+    $ho_detected_path = $ho_v2;
+} elseif (file_exists(__DIR__ . '/../' . $ho_v1)) {
+    $ho_status = '🟢 Detected (v1.0)';
+    $ho_detected_path = $ho_v1;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token($_POST['csrf_token'])) die('CSRF token validation failed.');
 
@@ -82,6 +97,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (update_config($new_config)) {
             $success = "Settings updated.";
             $config = load_config();
+            // Refresh detection
+            $ho_path = rtrim($config['hashover_path'] ?? 'hashover/', '/');
+            if (file_exists(__DIR__ . '/../' . $ho_path . '/backend/classes/hashover.php')) $ho_status = '🟢 Detected (v2.0)';
+            elseif (file_exists(__DIR__ . '/../' . $ho_path . '/hashover.php')) $ho_status = '🟢 Detected (v1.0)';
+            else $ho_status = '🔴 Not Found';
         }
     }
 }
@@ -131,13 +151,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div style="margin-top:20px; border-top: 1px solid #eee; padding-top: 20px;">
                 <h3>💬 Comment System</h3>
                 <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <label style="display:block; margin-bottom:10px; font-weight:bold; cursor:pointer;">
-                        <input type="checkbox" name="hashover_enabled" <?php echo ($config['hashover_enabled']??true)?'checked':''; ?>> Enable HashOver 2.0 (Recommended)
-                    </label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <label style="font-weight:bold; cursor:pointer;">
+                            <input type="checkbox" name="hashover_enabled" <?php echo ($config['hashover_enabled']??true)?'checked':''; ?>> Enable HashOver (Recommended)
+                        </label>
+                        <span style="font-size: 0.85rem; font-weight: 600; padding: 4px 10px; border-radius: 20px; background: #fff; border: 1px solid #ddd;"><?php echo $ho_status; ?></span>
+                    </div>
+
                     <div style="margin-bottom: 20px; padding-left: 25px;">
                         <label style="display:block; margin-bottom:5px; font-size: 0.85rem;">HashOver Root Path</label>
                         <input type="text" name="hashover_path" value="<?php echo htmlspecialchars($config['hashover_path'] ?? 'hashover/'); ?>" style="width:100%; max-width: 400px; padding:8px; border:1px solid #ddd; border-radius:4px;" placeholder="e.g. hashover/">
-                        <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">Must contain hashover.php. If not found, system falls back to native comments.</p>
+                        <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">Point this to your HashOver folder. See <a href="help.php#hashover" style="color: var(--primary);">Help</a> for installation guide.</p>
                     </div>
 
                     <label style="display:block; margin-bottom:10px; font-weight:bold; cursor:pointer; border-top: 1px solid #ddd; padding-top: 15px;">
