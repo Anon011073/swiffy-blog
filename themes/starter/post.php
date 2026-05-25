@@ -6,6 +6,7 @@ $is_admin = isset($_SESSION['admin_logged_in']);
 $admin_nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] : ($config['admin_user'] ?? 'Admin');
 
 function render_native_comments($post, $config, $admin_nickname) {
+    if (!($config['comments_enabled'] ?? true)) return;
     require_once __DIR__ . '/../../app/comments.php';
     $comments = get_comments($post['slug']);
     $is_admin = isset($_SESSION['admin_logged_in']);
@@ -119,7 +120,6 @@ function render_native_comments($post, $config, $admin_nickname) {
         <h3>Comments</h3>
         <?php
         $post_comments_on = $post['comments_on'] ?? true;
-        $hashover_enabled = $config['hashover_enabled'] ?? true;
         $disqus_shortname = $config['disqus_shortname'] ?? '';
 
         if ($post_comments_on):
@@ -137,19 +137,7 @@ function render_native_comments($post, $config, $admin_nickname) {
                         (d.head || d.body).appendChild(s);
                     })();
                 </script>
-            <?php elseif ($hashover_enabled):
-                $ho_path = rtrim($config['hashover_path'] ?? 'hashover/', '/');
-                $ho_v1 = $ho_path . '/hashover.php';
-                $ho_v2 = $ho_path . '/backend/classes/hashover.php';
-
-                if (file_exists($ho_v2)) {
-                    include $ho_v2;
-                } elseif (file_exists($ho_v1)) {
-                    include $ho_v1;
-                } else {
-                    render_native_comments($post, $config, $admin_nickname);
-                }
-            else:
+            <?php else:
                 render_native_comments($post, $config, $admin_nickname);
             endif;
         else: ?>

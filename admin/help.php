@@ -32,28 +32,18 @@ $config = load_config();
 
         <div class="toc">
             <ul>
-                <li><a href="#hashover">💬 HashOver Setup</a></li>
+                <li><a href="#comments">💬 Comments</a></li>
                 <li><a href="#plugins">🧩 Plugins</a></li>
                 <li><a href="#themes">🎨 Themes</a></li>
                 <li><a href="#shortcodes">📝 Shortcodes</a></li>
             </ul>
         </div>
 
-        <div class="card" id="hashover">
-            <h2>💬 Setting up HashOver 2.0</h2>
-            <p>Swiffy Blog recommends **HashOver 2.0** for a powerful, self-hosted, database-driven comment system (using SQLite).</p>
-
-            <p><strong>Step 1: Download & Extract</strong></p>
-            <p>Download HashOver 2.0 and extract the contents. You will get a folder (usually named <code>hashover-next</code> or <code>hashover</code>).</p>
-
-            <p><strong>Step 2: Placement</strong></p>
-            <p>Upload the entire HashOver folder to your blog's root directory. For example, if your blog is at <code>/public_html/</code>, your HashOver folder should be at <code>/public_html/hashover/</code>.</p>
-
-            <p><strong>Step 3: Configuration</strong></p>
-            <p>In your admin <strong>Settings</strong>, ensure the "HashOver Root Path" matches your folder name (default is <code>hashover/</code>). The system will automatically detect the version.</p>
-
-            <p><strong>Note for Version 2.0 Users:</strong></p>
-            <p>The system looks for the file at <code>[path]/backend/classes/hashover.php</code>. If you renamed your folders, ensure the structure remains standard.</p>
+        <div class="card" id="comments">
+            <h2>💬 Comment System</h2>
+            <p>Swiffy Blog features a built-in JSON-based comment system. You can also integrate Disqus by providing your shortname in the settings.</p>
+            <p><strong>Native Comments:</strong> Stored locally in <code>content/comments/</code>. Supports Gravatar and admin labels.</p>
+            <p><strong>Disqus:</strong> To use Disqus, create an account at <a href="https://disqus.com" target="_blank">disqus.com</a>, create a "site", and enter your "Shortname" in the <strong>Settings</strong> panel.</p>
         </div>
 
         <div class="card" id="plugins">

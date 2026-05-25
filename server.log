@@ -1,0 +1,43 @@
+[Mon May 25 02:07:19 2026] PHP 8.3.6 Development Server (http://localhost:8000) started
+[Mon May 25 02:07:24 2026] [::1]:40946 Accepted
+[Mon May 25 02:07:24 2026] [::1]:40946 [200]: GET /admin/settings.php
+[Mon May 25 02:07:24 2026] [::1]:40946 Closing
+[Mon May 25 02:07:25 2026] [::1]:40958 Accepted
+[Mon May 25 02:07:25 2026] [::1]:40958 [200]: GET /admin/help.php
+[Mon May 25 02:07:25 2026] [::1]:40958 Closing
+[Mon May 25 02:07:25 2026] [::1]:40960 Accepted
+[Mon May 25 02:07:25 2026] [::1]:40960 [200]: GET /admin/style.css
+[Mon May 25 02:07:25 2026] [::1]:40960 Closing
+[Mon May 25 02:07:25 2026] [::1]:40970 Accepted
+[Mon May 25 02:07:25 2026] [::1]:40970 [200]: GET /index.php?post=demo-post-1
+[Mon May 25 02:07:25 2026] [::1]:40970 Closing
+[Mon May 25 02:07:25 2026] [::1]:40982 Accepted
+[Mon May 25 02:07:25 2026] [::1]:40984 Accepted
+[Mon May 25 02:07:25 2026] [::1]:40982 [200]: GET /themes/swiffy-x/style.css
+[Mon May 25 02:07:25 2026] [::1]:40984 [200]: GET /uploads/_34b1f55a-ed04-46db-8550-334e3da2a9ab.jpg
+[Mon May 25 02:07:25 2026] [::1]:40982 Closing
+[Mon May 25 02:07:25 2026] [::1]:40984 Closing
+[Mon May 25 02:07:25 2026] [::1]:40994 Accepted
+[Mon May 25 02:07:25 2026] [::1]:40994 [200]: GET /uploads/avatar_1777431177.jpg
+[Mon May 25 02:07:25 2026] [::1]:40994 Closing
+[Mon May 25 02:13:24 2026] [::1]:48170 Accepted
+[Mon May 25 02:13:24 2026] [::1]:48170 [200]: GET /admin/settings.php
+[Mon May 25 02:13:24 2026] [::1]:48170 Closing
+[Mon May 25 02:13:25 2026] [::1]:48172 Accepted
+[Mon May 25 02:13:25 2026] [::1]:48172 [200]: GET /admin/help.php
+[Mon May 25 02:13:25 2026] [::1]:48172 Closing
+[Mon May 25 02:13:25 2026] [::1]:48176 Accepted
+[Mon May 25 02:13:25 2026] [::1]:48176 [200]: GET /admin/style.css
+[Mon May 25 02:13:25 2026] [::1]:48176 Closing
+[Mon May 25 02:13:25 2026] [::1]:48182 Accepted
+[Mon May 25 02:13:25 2026] [::1]:48182 [200]: GET /index.php?post=demo-post-1
+[Mon May 25 02:13:25 2026] [::1]:48182 Closing
+[Mon May 25 02:13:25 2026] [::1]:48192 Accepted
+[Mon May 25 02:13:25 2026] [::1]:48202 Accepted
+[Mon May 25 02:13:25 2026] [::1]:48206 Accepted
+[Mon May 25 02:13:25 2026] [::1]:48192 [200]: GET /themes/swiffy-x/style.css
+[Mon May 25 02:13:25 2026] [::1]:48192 Closing
+[Mon May 25 02:13:25 2026] [::1]:48202 [200]: GET /uploads/_34b1f55a-ed04-46db-8550-334e3da2a9ab.jpg
+[Mon May 25 02:13:25 2026] [::1]:48202 Closing
+[Mon May 25 02:13:25 2026] [::1]:48206 [200]: GET /uploads/avatar_1777431177.jpg
+[Mon May 25 02:13:25 2026] [::1]:48206 Closing
