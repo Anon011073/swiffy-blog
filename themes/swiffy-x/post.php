@@ -15,8 +15,9 @@ function render_native_comments_sfx($post, $config, $admin_nickname) {
         foreach ($comments as $comment):
             if (!($comment['approved'] ?? false)) continue;
             $is_comment_admin = ($comment['nickname'] === $admin_nickname);
+            $c_id = $comment['id'] ?? uniqid();
 ?>
-            <div class="comment" id="comment-<?php echo $comment['id']; ?>" style="margin-bottom: var(--space-md); padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 15px;">
+            <div class="comment" id="comment-<?php echo $c_id; ?>" style="margin-bottom: var(--space-md); padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 15px;">
                 <?php
                 $c_email = $comment['email'] ?? '';
                 $c_avatar = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($c_email))) . "?s=48&d=mp";
@@ -48,7 +49,7 @@ function render_native_comments_sfx($post, $config, $admin_nickname) {
         </div>
     <?php endif; ?>
 
-    <form action="app/comment_submit.php" method="POST" style="margin-top: var(--space-lg);">
+    <form action="app/comment_submit.php" method="POST" style="margin-top: var(--space-lg);" id="comment-form">
         <input type="hidden" name="post_slug" value="<?php echo htmlspecialchars($post['slug']); ?>">
         <div style="display: grid; gap: 16px;">
             <?php if ($is_admin): ?>
@@ -70,15 +71,15 @@ function render_native_comments_sfx($post, $config, $admin_nickname) {
 }
 ?>
 
-<div class="sfx-container sfx-reading-mode">
-    <article class="sfx-post-full">
-        <header class="sfx-post-header">
-            <h1 class="sfx-post-title" style="font-size: <?php echo ($config['theme_options']['post_title_size'] ?? '3.5'); ?>rem;">
+<div class="container article-container">
+    <article class="post-full">
+        <header>
+            <h1 class="post-title" style="font-size: <?php echo ($config['theme_options']['post_title_size'] ?? '3.5'); ?>rem;">
                 <?php echo htmlspecialchars($post['title']); ?>
             </h1>
 
-            <div class="sfx-post-meta">
-                <span class="sfx-date"><?php echo strtoupper(format_date($post['date'])); ?></span>
+            <div class="post-meta">
+                <span class="date"><?php echo strtoupper(format_date($post['date'])); ?></span>
             </div>
 
             <?php
@@ -131,7 +132,7 @@ function render_native_comments_sfx($post, $config, $admin_nickname) {
     </article>
 
     <?php if ($post['comments_on'] ?? true): ?>
-    <section class="comments-section" style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--border-color);">
+    <section class="comments-section" id="comments" style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--border-color);">
         <h3 style="margin-bottom: var(--space-md); font-size: 1.5rem;">Discussion</h3>
         <?php
         $disqus_shortname = $config['disqus_shortname'] ?? '';

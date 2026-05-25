@@ -12,12 +12,9 @@ $config = load_config();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Swiffy Blog Admin</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body { font-family: sans-serif; margin: 0; display: flex; min-height: 100vh; background: #f4f4f4; }
-        .sidebar { width: 250px; background: #222; color: #fff; padding: 1rem; flex-shrink: 0; }
-        .main-content { flex: 1; padding: 2rem; margin-left: 310px; margin-top: 50px; overflow-y: auto; }
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .card h2 { margin-top: 0; font-size: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
         .news-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f9f9f9; }
         .news-item:last-child { border-bottom: none; }

@@ -40,10 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (save_comment($post_slug, $comment_data)) {
                 $redirect_url = $_SERVER['HTTP_REFERER'] ?? '../index.php?post=' . $post_slug;
+
+                // Remove existing anchors and success flags
+                $redirect_url = strtok($redirect_url, '#');
+                $redirect_url = preg_replace('/[?&]comment_success=1/', '', $redirect_url);
+
                 $sep = (strpos($redirect_url, '?') !== false) ? '&' : '?';
-                if (strpos($redirect_url, 'comment_success') === false) {
-                    $redirect_url .= $sep . 'comment_success=1';
-                }
+                $redirect_url .= $sep . 'comment_success=1#comments';
+
                 redirect($redirect_url);
             }
         }

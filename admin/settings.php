@@ -81,17 +81,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
-include 'sidebar.php';
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Swiffy Blog Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<?php include "sidebar.php"; ?>
 <div class="main-content">
     <div class="header-flex">
         <h1>⚙️ Site Settings</h1>
     </div>
 
-    <?php if ($success): ?><div class="alert success"><?php echo $success; ?></div><?php endif; ?>
-    <?php if ($error): ?><div class="alert error"><?php echo $error; ?></div><?php endif; ?>
+    <?php if ($success): ?><div class="alert alert-success"><?php echo $success; ?></div><?php endif; ?>
+    <?php if ($error): ?><div class="alert alert-danger"><?php echo $error; ?></div><?php endif; ?>
 
     <form method="POST">
         <input type="hidden" name="csrf_token" value="<?php echo get_csrf_token(); ?>">
@@ -100,11 +107,11 @@ include 'sidebar.php';
             <h3>🌐 General Info</h3>
             <div class="form-group">
                 <label>Site Name</label>
-                <input type="text" name="site_name" value="<?php echo htmlspecialchars($config['site_name'] ?? ''); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+                <input type="text" name="site_name" value="<?php echo htmlspecialchars($config['site_name'] ?? ''); ?>">
             </div>
             <div class="form-group">
                 <label>Footer Text (Copyright / Notice)</label>
-                <textarea name="footer_text" style="width:100%; height:80px; padding:10px; border:1px solid #ddd; border-radius:4px;"><?php echo htmlspecialchars($config['footer_text'] ?? ''); ?></textarea>
+                <textarea name="footer_text" style="height:80px;"><?php echo htmlspecialchars($config['footer_text'] ?? ''); ?></textarea>
                 <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">Supports HTML. Leave blank to use site name and year.</p>
             </div>
         </div>
@@ -114,11 +121,11 @@ include 'sidebar.php';
                 <h3>📜 Blog Behavior</h3>
                 <div class="form-group">
                     <label>Posts Per Page</label>
-                    <input type="number" name="posts_per_page" value="<?php echo (int)($config['posts_per_page'] ?? 5); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+                    <input type="number" name="posts_per_page" value="<?php echo (int)($config['posts_per_page'] ?? 5); ?>">
                 </div>
                 <div class="form-group">
                     <label>Sidebar Position</label>
-                    <select name="sidebar_position" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+                    <select name="sidebar_position">
                         <option value="right" <?php echo ($config['sidebar_position'] ?? 'right') === 'right' ? 'selected' : ''; ?>>Right</option>
                         <option value="left" <?php echo ($config['sidebar_position'] ?? 'right') === 'left' ? 'selected' : ''; ?>>Left</option>
                     </select>
@@ -134,7 +141,7 @@ include 'sidebar.php';
 
                     <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
                         <label style="display:block; margin-bottom:5px; font-weight:bold;">Disqus Shortname</label>
-                        <input type="text" name="disqus_shortname" value="<?php echo htmlspecialchars($config['disqus_shortname'] ?? ''); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;" placeholder="e.g. my-blog-shortname">
+                        <input type="text" name="disqus_shortname" value="<?php echo htmlspecialchars($config['disqus_shortname'] ?? ''); ?>" placeholder="e.g. my-blog-shortname">
                         <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">If set, Disqus will be used instead of the native system.</p>
                     </div>
                 </div>
@@ -144,19 +151,19 @@ include 'sidebar.php';
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
                         <div>
                             <label style="font-size: 0.85rem; font-weight: normal;">Widget Title</label>
-                            <input type="text" name="recent_comments_title" value="<?php echo htmlspecialchars($config['recent_comments_title'] ?? 'Recent Comments'); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                            <input type="text" name="recent_comments_title" value="<?php echo htmlspecialchars($config['recent_comments_title'] ?? 'Recent Comments'); ?>">
                         </div>
                         <div>
                             <label style="font-size: 0.85rem; font-weight: normal;">Limit</label>
-                            <input type="number" name="recent_comments_limit" value="<?php echo htmlspecialchars($config['recent_comments_limit'] ?? 3); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                            <input type="number" name="recent_comments_limit" value="<?php echo htmlspecialchars($config['recent_comments_limit'] ?? 3); ?>">
                         </div>
                         <div>
                             <label style="font-size: 0.85rem; font-weight: normal;">Avatar Size (px)</label>
-                            <input type="number" name="comment_avatar_size" value="<?php echo htmlspecialchars($config['comment_avatar_size'] ?? 40); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                            <input type="number" name="comment_avatar_size" value="<?php echo htmlspecialchars($config['comment_avatar_size'] ?? 40); ?>">
                         </div>
                         <div>
                             <label style="font-size: 0.85rem; font-weight: normal;">Excerpt Length</label>
-                            <input type="number" name="comment_excerpt_length" value="<?php echo htmlspecialchars($config['comment_excerpt_length'] ?? 50); ?>" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                            <input type="number" name="comment_excerpt_length" value="<?php echo htmlspecialchars($config['comment_excerpt_length'] ?? 50); ?>">
                         </div>
                     </div>
                     <div style="margin-top: 15px; display: flex; gap: 20px;">
@@ -188,7 +195,7 @@ include 'sidebar.php';
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div>
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">Type</label>
-                    <select name="back_to_top_type" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+                    <select name="back_to_top_type">
                         <option value="icon" <?php echo ($config['back_to_top_type'] ?? 'icon') === 'icon' ? 'selected' : ''; ?>>Icon Only</option>
                         <option value="text" <?php echo ($config['back_to_top_type'] ?? 'icon') === 'text' ? 'selected' : ''; ?>>Text Only</option>
                         <option value="both" <?php echo ($config['back_to_top_type'] ?? 'icon') === 'both' ? 'selected' : ''; ?>>Both</option>
@@ -196,37 +203,37 @@ include 'sidebar.php';
                 </div>
                 <div>
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">Button Color</label>
-                    <input type="color" name="back_to_top_color" value="<?php echo htmlspecialchars($config['back_to_top_color'] ?? '#8b5cf6'); ?>" style="width:100%; height:40px; padding:2px; border:1px solid #ddd; border-radius:4px;">
+                    <input type="color" name="back_to_top_color" value="<?php echo htmlspecialchars($config['back_to_top_color'] ?? '#8b5cf6'); ?>" style="height:40px; padding:2px;">
                 </div>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
                 <div>
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">Link Text</label>
-                    <input type="text" name="back_to_top_text" value="<?php echo htmlspecialchars($config['back_to_top_text'] ?? 'Top'); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+                    <input type="text" name="back_to_top_text" value="<?php echo htmlspecialchars($config['back_to_top_text'] ?? 'Top'); ?>">
                 </div>
                 <div>
                     <label style="display:block; margin-bottom:5px; font-weight:bold;">Button Size (px)</label>
-                    <input type="number" name="back_to_top_size" value="<?php echo htmlspecialchars($config['back_to_top_size'] ?? 40); ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+                    <input type="number" name="back_to_top_size" value="<?php echo htmlspecialchars($config['back_to_top_size'] ?? 40); ?>">
                 </div>
             </div>
         </div>
 
         <div style="margin-top: 20px; display: flex; gap: 10px;">
-            <button type="submit" style="flex: 1; padding: 15px; font-weight: bold; background:#8b5cf6; color:#fff; border:none; border-radius:6px; cursor:pointer;">💾 Save All Site Settings</button>
-            <button type="submit" name="action" value="reset_settings" style="background: #6c757d; color: #fff; padding: 15px; font-weight: bold; border:none; border-radius:6px; cursor:pointer;" onclick="return confirm('Reset all site settings (not content) to defaults?')">🔄 Reset to Defaults</button>
+            <button type="submit" class="btn btn-primary" style="flex: 1; padding: 15px;">💾 Save All Site Settings</button>
+            <button type="submit" name="action" value="reset_settings" class="btn" style="background: #6c757d; color: #fff; padding: 15px;" onclick="return confirm('Reset all site settings (not content) to defaults?')">🔄 Reset to Defaults</button>
         </div>
     </form>
 
     <div class="card" style="margin-top: 30px; border-top: 4px solid #ffc107;">
         <h3>✨ Demo Content</h3>
         <p>New to the CMS? You can import demo content (posts, pages, and sample settings) to see how everything looks.</p>
-        <div class="warning" style="background: #fff3cd; padding: 15px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #ffeeba; color:#856404;">
+        <div class="alert alert-warning" style="background: #fff3cd; padding: 15px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #ffeeba; color:#856404;">
             <strong>Note:</strong> This will NOT delete your existing content, but it will overwrite site settings with demo defaults.
         </div>
         <form method="POST" onsubmit="return confirm('Import demo content? This will update your site settings.')">
             <input type="hidden" name="csrf_token" value="<?php echo get_csrf_token(); ?>">
             <input type="hidden" name="action" value="import_demo">
-            <button type="submit" style="background: #ffc107; color: #000; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold;">Import Demo Content</button>
+            <button type="submit" class="btn btn-warning">Import Demo Content</button>
         </form>
     </div>
 </div>
