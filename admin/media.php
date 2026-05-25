@@ -66,10 +66,12 @@ if (isset($_GET['delete']) && isset($_GET['token'])) {
 }
 
 // Get Items
+$items = [];
 if ($tab === 'files') {
     $items = glob($files_dir . '*');
     $log_file = __DIR__ . '/../plugins/swiffy-download-gateway/logs/downloads.json';
-    $log_content = file_exists($log_file) ? json_decode(file_get_contents($log_file), true) : []; $dl_logs = is_array($log_content) ? array_reverse($log_content) : [];
+    $log_content = file_exists($log_file) ? json_decode(file_get_contents($log_file), true) : [];
+    $dl_logs = is_array($log_content) ? array_reverse($log_content) : [];
 } else {
     $items = glob($images_dir . '*.{jpg,jpeg,png,gif,webp}', GLOB_BRACE);
 }
@@ -91,62 +93,117 @@ function format_size($bytes) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media Library - Admin Panel</title>
+    <title>Media Management - Admin</title>
     <link rel="stylesheet" href="style.css">
     <style>
         :root {
             --accent-purple: #8b5cf6;
-            --bg-darker: #0f172a;
-            --card-bg: #ffffff;
+            --accent-green: #22c55e;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
         }
-        .main-content { flex: 1; padding: 2rem; margin-left: 310px; margin-top: 50px; }
-        .card { background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #edf2f7; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .main-content {
+            margin-left: 310px;
+            margin-top: 50px;
+            padding: 2.5rem;
+            min-height: calc(100vh - 50px);
+        }
+        h1 { font-size: 2rem; font-weight: 800; margin-bottom: 2rem; letter-spacing: -0.02em; }
 
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .tab-link { text-decoration: none; padding: 10px 20px; border-radius: 8px; color: #666; font-weight: 600; transition: 0.3s; }
-        .tab-link.active { background: var(--accent-purple); color: #fff; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 30px; background: rgba(255,255,255,0.03); padding: 6px; border-radius: 12px; width: fit-content; border: 1px solid var(--border); }
+        .tab-link { text-decoration: none; padding: 10px 24px; border-radius: 8px; color: var(--text-muted); font-weight: 600; transition: 0.2s; font-size: 0.95rem; }
+        .tab-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .tab-link.active { background: var(--accent-purple); color: #fff; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); }
 
-        .upload-area { border: 2px dashed #cbd5e0; padding: 40px; text-align: center; border-radius: 12px; transition: 0.3s; cursor: pointer; background: #f7fafc; }
-        .upload-area:hover { border-color: var(--accent-purple); background: #f0f4ff; }
+        .card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
 
-        .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-        .media-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; position: relative; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .media-item:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -5px rgba(0,0,0,0.1); border-color: var(--accent-purple); }
+        .upload-area {
+            border: 2px dashed var(--border);
+            padding: 50px 20px;
+            text-align: center;
+            border-radius: 16px;
+            transition: 0.3s;
+            cursor: pointer;
+            background: rgba(255,255,255,0.01);
+        }
+        .upload-area:hover { border-color: var(--accent-purple); background: rgba(139, 92, 246, 0.04); }
+        .upload-icon { font-size: 3rem; margin-bottom: 15px; display: block; }
 
-        .preview-box { width: 100%; aspect-ratio: 16/10; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+        .media-item {
+            background: #1a2234;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .media-item:hover { transform: translateY(-6px); border-color: var(--accent-purple); box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.3); }
+
+        .preview-box { width: 100%; aspect-ratio: 1/1; background: #0b1120; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .preview-box img { width: 100%; height: 100%; object-fit: cover; }
-        .file-ext-icon { font-size: 2.5rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; font-family: monospace; }
+        .file-ext-icon { font-size: 2.5rem; font-weight: 800; color: #334155; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        .item-info { padding: 12px; border-top: 1px solid #eee; }
-        .item-name { display: block; font-size: 0.85rem; font-weight: 700; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-        .item-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #718096; }
+        .item-info { padding: 16px; background: rgba(0,0,0,0.2); }
+        .item-name { display: block; font-size: 0.9rem; font-weight: 600; color: #f1f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
+        .item-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b; }
 
-        .actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; opacity: 0; transition: 0.3s; }
+        .actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; opacity: 0; transition: 0.2s; z-index: 10; }
         .media-item:hover .actions { opacity: 1; }
 
-        .action-btn { background: #fff; border: 1px solid #eee; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .action-btn:hover { background: #f8f9fa; color: var(--accent-purple); }
-        .btn-del:hover { color: #e53e3e; }
+        .action-btn { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #fff; font-size: 1.1rem; }
+        .action-btn:hover { background: var(--accent-purple); border-color: var(--accent-purple); transform: scale(1.1); }
+        .btn-del:hover { background: #ef4444; border-color: #ef4444; }
+
+        .error { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
+        .success { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); color: #4ade80; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
 
         .log-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
-        .log-table th, .log-table td { text-align: left; padding: 12px; border-bottom: 1px solid #edf2f7; }
-        .log-table th { background: #f7fafc; color: #4a5568; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .log-table th, .log-table td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border); }
+        .log-table th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
 
+        /* Modern Glass Helper */
+        .helper-card {
+            margin-top: 4rem;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%) !important;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-top: 4px solid var(--accent-purple) !important;
+            padding: 2.5rem !important;
+        }
+        .helper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .helper-header h3 { margin: 0; font-size: 1.5rem; }
+        .helper-badge { background: rgba(139, 92, 246, 0.2); color: var(--accent-purple); border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 16px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; }
+        .helper-preview { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 14px; margin: 20px 0; color: #94a3b8; font-size: 0.95rem; line-height: 1.6; }
 
-        /* Shortcode Helper Styles */
-        .helper-card { margin-top: 30px; border-top: 4px solid var(--accent-purple); position: relative; }
-        .helper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .helper-badge { background: var(--accent-purple); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
-        .helper-preview { background: #f8f9fa; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px; min-height: 45px; color: #718096; font-size: 0.9rem; }
-        .shortcode-box { background: #1a202c; color: #fff; padding: 15px; border-radius: 8px; display: flex; align-items: center; gap: 15px; font-family: monospace; }
-        .shortcode-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1.1rem; }
-        .helper-btns { display: flex; gap: 10px; }
-        .helper-btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; transition: 0.3s; }
-        .btn-copy { background: #22c55e; color: #fff; }
-        .btn-copy:hover { background: #16a34a; }
-        .btn-clear { background: #4b5563; color: #fff; }
-        .btn-clear:hover { background: #374151; }
-        .media-item.selected { border: 2px solid var(--accent-purple); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); transform: translateY(-4px); }
+        .shortcode-box { background: #0b1120; border: 1px solid rgba(255,255,255,0.1); padding: 12px 12px 12px 24px; border-radius: 16px; display: flex; align-items: center; gap: 20px; }
+        .shortcode-text { flex: 1; font-family: "Fira Code", "JetBrains Mono", monospace; color: var(--accent-purple); font-size: 1.1rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .helper-btns { display: flex; gap: 12px; }
+        .helper-btn { padding: 12px 24px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; transition: 0.2s; font-size: 0.95rem; }
+        .btn-copy { background: var(--accent-green); color: #fff; box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3); }
+        .btn-copy:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn-clear { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-clear:hover { background: rgba(255,255,255,0.1); }
+
+        .media-item.selected { border: 2px solid var(--accent-purple); transform: translateY(-8px); box-shadow: 0 0 30px rgba(139, 92, 246, 0.3); }
+        .media-item.selected::after { content: "✓"; position: absolute; top: 12px; left: 12px; background: var(--accent-purple); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; border: 2px solid #fff; }
     </style>
 </head>
 <body>
@@ -169,9 +226,9 @@ function format_size($bytes) {
                 <input type="hidden" name="csrf_token" value="<?php echo get_csrf_token(); ?>">
                 <input type="file" id="fileInput" name="files[]" multiple style="display: none;" onchange="this.form.submit()">
                 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                    <div style="font-size: 2rem; margin-bottom: 10px;">☁️</div>
+                    <span class="upload-icon">☁️</span>
                     <strong>Click or Drag to Upload <?php echo $tab === 'files' ? 'Secure Files' : 'Images'; ?></strong>
-                    <p style="color: #718096; font-size: 0.9rem; margin-top: 5px;">Supported: <?php echo $tab === 'files' ? 'ZIP, RAR, PDF, EXE, MP3, etc.' : 'JPG, PNG, WEBP, GIF'; ?></p>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-top: 8px;">Supported: <?php echo $tab === 'files' ? 'ZIP, RAR, PDF, EXE, MP3, etc.' : 'JPG, PNG, WEBP, GIF'; ?></p>
                 </div>
             </form>
         </div>
@@ -204,7 +261,7 @@ function format_size($bytes) {
 
         <div class="media-grid">
             <?php if (empty($items)): ?>
-                <p style="text-align: center; color: #999; grid-column: 1 / -1; padding: 40px;">No <?php echo $tab; ?> found. Start by uploading some!</p>
+                <p style="text-align: center; color: #475569; grid-column: 1 / -1; padding: 60px; font-size: 1.1rem;">No <?php echo $tab; ?> found. Start by uploading some!</p>
             <?php else: ?>
                 <?php foreach ($items as $item):
                     $name = basename($item);
@@ -235,29 +292,28 @@ function format_size($bytes) {
                             <span class="item-name" title="<?php echo htmlspecialchars($name); ?>"><?php echo htmlspecialchars($name); ?></span>
                             <div class="item-meta">
                                 <span><?php echo $size; ?></span>
-                                <span><?php echo date('M d, Y', filemtime($item)); ?></span>
+                                <span><?php echo date('M d', filemtime($item)); ?></span>
                             </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
-
-
         </div>
+
         <?php if ($tab === "images" && $gallery_enabled): ?>
         <div class="card helper-card" id="shortcodeHelper">
             <div class="helper-header">
                 <h3>🖼️ Gallery Shortcode Helper</h3>
                 <span class="helper-badge" id="selectedCount">0 selected</span>
             </div>
-            <p style="margin-bottom: 10px; font-size: 0.95rem; color: #4a5568;">Click images above to select them. Then copy this shortcode into your post content.</p>
+            <p style="margin-bottom: 10px; font-size: 1rem; color: #94a3b8;">Select images from the grid above to build your gallery. The shortcode updates automatically.</p>
 
             <div class="helper-preview" id="imagePreviewNames">No images selected.</div>
 
             <div class="shortcode-box">
                 <div class="shortcode-text" id="shortcodeOutput">[swiffy-gallery images=""]</div>
                 <div class="helper-btns">
-                    <button class="helper-btn btn-copy" onclick="copyGalleryShortcode()">Copy</button>
+                    <button class="helper-btn btn-copy" onclick="copyGalleryShortcode()">Copy Shortcode</button>
                     <button class="helper-btn btn-clear" onclick="clearSelection()">Clear</button>
                 </div>
             </div>
