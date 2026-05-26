@@ -35,7 +35,7 @@
             --font-index: '<?php echo $index_font; ?>', monospace;
             --font-excerpt: '<?php echo $excerpt_font; ?>', sans-serif;
 
-            --site-title-size: <?php echo (!empty($opts['site_title_size']) ? $opts['site_title_size'] : '1.25') . 'rem'; ?>;
+            --site-title-size: <?php echo (!empty($opts['site_title_size']) ? $opts['site_title_size'] : '30') . 'px'; ?>;
             --post-title-size: <?php echo (!empty($opts['post_title_size']) ? $opts['post_title_size'] : '4.0') . 'rem'; ?>;
             --body-text-size: <?php echo (!empty($opts['body_text_size']) ? $opts['body_text_size'] : '1.25') . 'rem'; ?>;
 
@@ -116,7 +116,12 @@
     <header class="site-header">
         <div class="container header-inner">
             <div class="site-title">
-                <a href="index.php"><?php echo htmlspecialchars($config['site_name']); ?><span class="slash">/</span>Blog</a>
+                <a href="index.php">
+                    <?php echo htmlspecialchars($config['site_name']); ?>
+                    <?php if (!empty($opts['site_title_suffix'])): ?>
+                        <span class="slash"><?php echo htmlspecialchars($opts['site_title_separator'] ?? '/'); ?></span><?php echo htmlspecialchars($opts['site_title_suffix']); ?>
+                    <?php endif; ?>
+                </a>
             </div>
             <nav class="main-nav">
                 <ul>

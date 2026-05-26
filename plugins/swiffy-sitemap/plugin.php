@@ -7,7 +7,7 @@
 return [
     'name' => 'Swiffy Sitemap',
     'version' => '1.0.0',
-    'settings_url' => 'settings.php?plugin=swiffy-sitemap',
+    'settings_url' => '../plugins/swiffy-sitemap/admin/settings.php',
     'hooks' => [
         'system_init' => function() {
             if (isset($_GET['sitemap'])) {

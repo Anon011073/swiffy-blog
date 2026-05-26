@@ -24,7 +24,6 @@ if ($prism_options['line_numbers']) {
 }
 
 if ($prism_options['copy_button']) {
-    $css[] = "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.css";
     $js[] = "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js";
 }
 

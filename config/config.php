@@ -23,6 +23,7 @@ return array (
     array (
       0 => 'search',
       1 => 'recent_posts',
+      2 => 'recent_comments',
     ),
     'footer1' => 
     array (
@@ -31,6 +32,12 @@ return array (
     array (
     ),
     'footer3' => 
+    array (
+    ),
+    'upper' =>
+    array (
+    ),
+    'lower' =>
     array (
     ),
   ),
@@ -45,7 +52,8 @@ return array (
     6 => 'simple-gallery',
     7 => 'swiffy-fast-cache',
     8 => 'swiffy-sitemap',
-    9 => 'swiffy-contact',
+    9 => 'swiffy-profile',
+    10 => 'swiffy-contact',
   ),
   'menu' => 
   array (
@@ -91,7 +99,9 @@ return array (
     'index_font' => 'Inconsolata',
     'excerpt_font' => 'Inconsolata',
     'meta_font' => 'Inter',
-    'site_title_size' => '2.25',
+    'site_title_separator' => '/',
+    'site_title_suffix' => 'Updates',
+    'site_title_size' => '32',
     'post_title_size' => '4.0',
     'body_text_size' => '1.25',
     'reading_max_width' => '720',
@@ -129,5 +139,14 @@ return array (
   'likes_options' => 
   array (
     'icon_set' => 'hearts',
+  ),
+  'recent_comments_title' => 'Community Buzz',
+  'recent_comments_limit' => 5,
+  'comment_avatar_size' => 40,
+  'comment_excerpt_length' => 50,
+  'show_comment_avatar' => true,
+  'show_comment_excerpt' => true,
+  'widget_links' =>
+  array (
   ),
 );

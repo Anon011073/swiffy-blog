@@ -66,10 +66,12 @@ if (isset($_GET['delete']) && isset($_GET['token'])) {
 }
 
 // Get Items
+$items = [];
 if ($tab === 'files') {
     $items = glob($files_dir . '*');
     $log_file = __DIR__ . '/../plugins/swiffy-download-gateway/logs/downloads.json';
-    $log_content = file_exists($log_file) ? json_decode(file_get_contents($log_file), true) : []; $dl_logs = is_array($log_content) ? array_reverse($log_content) : [];
+    $log_content = file_exists($log_file) ? json_decode(file_get_contents($log_file), true) : [];
+    $dl_logs = is_array($log_content) ? array_reverse($log_content) : [];
 } else {
     $items = glob($images_dir . '*.{jpg,jpeg,png,gif,webp}', GLOB_BRACE);
 }
@@ -91,68 +93,147 @@ function format_size($bytes) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media Library - Admin Panel</title>
+    <title>Media Management - Admin</title>
     <link rel="stylesheet" href="style.css">
     <style>
         :root {
             --accent-purple: #8b5cf6;
-            --bg-darker: #0f172a;
-            --card-bg: #ffffff;
+            --accent-green: #22c55e;
         }
-        .main-content { flex: 1; padding: 2rem; margin-left: 310px; margin-top: 50px; }
-        .card { background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #edf2f7; }
+        .main-content {
+            margin-left: 310px;
+            margin-top: 50px;
+            padding: 2rem;
+        }
 
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .tab-link { text-decoration: none; padding: 10px 20px; border-radius: 8px; color: #666; font-weight: 600; transition: 0.3s; }
-        .tab-link.active { background: var(--accent-purple); color: #fff; }
+        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 
-        .upload-area { border: 2px dashed #cbd5e0; padding: 40px; text-align: center; border-radius: 12px; transition: 0.3s; cursor: pointer; background: #f7fafc; }
+        .view-controls { display: flex; gap: 10px; }
+        .view-btn { background: #fff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+        .view-btn.active { background: var(--accent-purple); color: #fff; border-color: var(--accent-purple); }
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            padding: 30px;
+            text-align: center;
+            border-radius: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+            background: #f8fafc;
+        }
         .upload-area:hover { border-color: var(--accent-purple); background: #f0f4ff; }
 
-        .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-        .media-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; position: relative; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .media-item:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -5px rgba(0,0,0,0.1); border-color: var(--accent-purple); }
+        /* Grid View */
+        .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-top: 2rem; }
+        .media-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; position: relative; transition: 0.3s; cursor: pointer; }
+        .media-item:hover { transform: translateY(-3px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .media-item.selected {
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+            transform: scale(0.98);
+        }
+        .media-item.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--accent-purple);
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
 
-        .preview-box { width: 100%; aspect-ratio: 16/10; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .preview-box { width: 100%; aspect-ratio: 1/1; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .preview-box img { width: 100%; height: 100%; object-fit: cover; }
-        .file-ext-icon { font-size: 2.5rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; font-family: monospace; }
+        .file-ext-icon { font-size: 1.5rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
 
-        .item-info { padding: 12px; border-top: 1px solid #eee; }
-        .item-name { display: block; font-size: 0.85rem; font-weight: 700; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-        .item-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #718096; }
+        .item-info { padding: 8px; border-top: 1px solid #f1f5f9; }
+        .item-name { display: block; font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; opacity: 0; transition: 0.3s; }
+        .actions { position: absolute; top: 5px; right: 5px; display: flex; gap: 4px; opacity: 0; transition: 0.2s; }
         .media-item:hover .actions { opacity: 1; }
+        .action-btn { background: #fff; border: 1px solid #eee; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .action-btn:hover { color: var(--accent-purple); }
+        .btn-del:hover { color: #ef4444; }
 
-        .action-btn { background: #fff; border: 1px solid #eee; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .action-btn:hover { background: #f8f9fa; color: var(--accent-purple); }
-        .btn-del:hover { color: #e53e3e; }
+        /* List View */
+        .media-list { display: flex; flex-direction: column; gap: 8px; margin-top: 2rem; }
+        .media-list .media-item { display: flex; align-items: center; padding: 8px 12px; }
+        .media-list .preview-box { width: 50px; height: 50px; aspect-ratio: 1/1; border-radius: 4px; margin-right: 15px; }
+        .media-list .item-info { border: none; padding: 0; flex: 1; display: flex; align-items: center; justify-content: space-between; }
+        .media-list .item-name { font-size: 0.9rem; }
+        .media-list .item-meta { font-size: 0.8rem; color: #64748b; margin-left: 20px; }
+        .media-list .actions { position: static; opacity: 1; margin-left: 20px; }
 
-        .log-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
-        .log-table th, .log-table td { text-align: left; padding: 12px; border-bottom: 1px solid #edf2f7; }
-        .log-table th { background: #f7fafc; color: #4a5568; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-
-
-        /* Shortcode Helper Styles */
-        .helper-card { margin-top: 30px; border-top: 4px solid var(--accent-purple); position: relative; }
-        .helper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .helper-badge { background: #007bff; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
-        .helper-preview { background: #f8f9fa; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px; min-height: 45px; color: #718096; font-size: 0.9rem; }
-        .shortcode-box { background: #1a202c; color: #fff; padding: 15px; border-radius: 8px; display: flex; align-items: center; gap: 15px; font-family: monospace; }
-        .shortcode-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1.1rem; }
+        /* Shortcode Helper - Refined */
+        .helper-card {
+            margin-top: 30px;
+            border-top: 4px solid var(--accent-purple);
+            background: #fff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+        }
+        .helper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .helper-header h3 { margin: 0; font-size: 1.1rem; color: #1e293b; }
+        .helper-badge { background: #f5f3ff; color: var(--accent-purple); padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid #ddd6fe; }
+        .helper-preview {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 40px;
+            color: #475569;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .shortcode-box {
+            background: #0f172a;
+            color: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .shortcode-text {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 0.95rem;
+            color: #e2e8f0;
+        }
         .helper-btns { display: flex; gap: 10px; }
-        .helper-btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; transition: 0.3s; }
-        .btn-copy { background: #22c55e; color: #fff; }
-        .btn-copy:hover { background: #16a34a; }
-        .btn-clear { background: #4b5563; color: #fff; }
-        .btn-clear:hover { background: #374151; }
-        .media-item.selected { border: 2px solid var(--accent-purple); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); transform: translateY(-4px); }
+        .helper-btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; transition: 0.2s; font-size: 0.85rem; }
+        .btn-copy { background: var(--accent-green); color: #fff; }
+        .btn-copy:hover { opacity: 0.9; }
+        .btn-clear { background: #64748b; color: #fff; }
+        .btn-clear:hover { background: #475569; }
+
+        .error { background: #fef2f2; border: 1px solid #fee2e2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        .success { background: #f0fdf4; border: 1px solid #dcfce7; color: #166534; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
     </style>
 </head>
 <body>
 <?php include "sidebar.php"; ?>
     <div class="main-content">
-        <h1>Media Management</h1>
+        <div class="header-row">
+            <h1>Media Management</h1>
+            <div class="view-controls">
+                <button class="view-btn active" id="gridBtn" onclick="setView('grid')">Grid</button>
+                <button class="view-btn" id="listBtn" onclick="setView('list')">List</button>
+            </div>
+        </div>
 
         <div class="tabs">
             <a href="?tab=images" class="tab-link <?php echo $tab === 'images' ? 'active' : ''; ?>">🖼️ Images</a>
@@ -169,49 +250,23 @@ function format_size($bytes) {
                 <input type="hidden" name="csrf_token" value="<?php echo get_csrf_token(); ?>">
                 <input type="file" id="fileInput" name="files[]" multiple style="display: none;" onchange="this.form.submit()">
                 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                    <div style="font-size: 2rem; margin-bottom: 10px;">☁️</div>
-                    <strong>Click or Drag to Upload <?php echo $tab === 'files' ? 'Secure Files' : 'Images'; ?></strong>
-                    <p style="color: #718096; font-size: 0.9rem; margin-top: 5px;">Supported: <?php echo $tab === 'files' ? 'ZIP, RAR, PDF, EXE, MP3, etc.' : 'JPG, PNG, WEBP, GIF'; ?></p>
+                    <div style="font-size: 1.5rem; margin-bottom: 5px;">☁️</div>
+                    <strong>Click or Drag to Upload</strong>
                 </div>
             </form>
         </div>
 
-        <?php if ($tab === 'files' && !empty($dl_logs)): ?>
-        <div class="card">
-            <h3>📊 Recent Download Activity</h3>
-            <table class="log-table">
-                <thead>
-                    <tr>
-                        <th>File</th>
-                        <th>IP Address</th>
-                        <th>Date & Time</th>
-                        <th>Referrer</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach (array_slice($dl_logs, 0, 10) as $log): ?>
-                        <tr>
-                            <td style="font-weight: 600; color: var(--accent-purple);"><?php echo htmlspecialchars($log['file']); ?></td>
-                            <td><code><?php echo htmlspecialchars($log['ip']); ?></code></td>
-                            <td><?php echo date('M d, Y H:i:s', $log['time']); ?></td>
-                            <td style="color: #a0aec0; font-size: 0.75rem;"><?php echo htmlspecialchars($log['ref']); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-        <?php endif; ?>
-
-        <div class="media-grid">
+        <div class="media-grid" id="mediaContainer">
             <?php if (empty($items)): ?>
-                <p style="text-align: center; color: #999; grid-column: 1 / -1; padding: 40px;">No <?php echo $tab; ?> found. Start by uploading some!</p>
+                <p style="text-align: center; color: #94a3b8; grid-column: 1 / -1; padding: 40px;">No items found.</p>
             <?php else: ?>
                 <?php foreach ($items as $item):
                     $name = basename($item);
                     $ext = pathinfo($name, PATHINFO_EXTENSION);
                     $size = format_size(filesize($item));
+                    $date = date('M d, Y', filemtime($item));
                 ?>
-                    <div class="media-item" <?php echo ($tab === "images" && $gallery_enabled) ? "onclick=\"toggleSelect(this, '".addslashes($name)."')\"" : ""; ?>>
+                    <div class="media-item" onclick="toggleSelect(this, '<?php echo addslashes($name); ?>')">
                         <div class="actions">
                             <?php if ($tab === 'files'): ?>
                                 <a href="#" class="action-btn" title="Copy Shortcode" onclick="copyText('[sfx-download file=&quot;<?php echo addslashes($name); ?>&quot; label=&quot;Download <?php echo addslashes($name); ?>&quot;]'); return false;">🔗</a>
@@ -233,28 +288,22 @@ function format_size($bytes) {
 
                         <div class="item-info">
                             <span class="item-name" title="<?php echo htmlspecialchars($name); ?>"><?php echo htmlspecialchars($name); ?></span>
-                            <div class="item-meta">
-                                <span><?php echo $size; ?></span>
-                                <span><?php echo date('M d, Y', filemtime($item)); ?></span>
+                            <div class="item-meta" style="display: none;">
+                                <span><?php echo $size; ?></span> • <span><?php echo $date; ?></span>
                             </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
-    </div>
-
 
         <?php if ($tab === "images" && $gallery_enabled): ?>
-        <div class="card helper-card" id="shortcodeHelper">
+        <div class="card helper-card">
             <div class="helper-header">
                 <h3>🖼️ Gallery Shortcode Helper</h3>
                 <span class="helper-badge" id="selectedCount">0 selected</span>
             </div>
-            <p style="margin-bottom: 10px; font-size: 0.95rem; color: #4a5568;">Click images above to select them. Then copy this shortcode into your post content.</p>
-
             <div class="helper-preview" id="imagePreviewNames">No images selected.</div>
-
             <div class="shortcode-box">
                 <div class="shortcode-text" id="shortcodeOutput">[swiffy-gallery images=""]</div>
                 <div class="helper-btns">
@@ -264,11 +313,33 @@ function format_size($bytes) {
             </div>
         </div>
         <?php endif; ?>
+    </div>
 
     <script>
     let selectedImages = [];
+    let currentView = 'grid';
+
+    function setView(view) {
+        currentView = view;
+        const container = document.getElementById('mediaContainer');
+        const gridBtn = document.getElementById('gridBtn');
+        const listBtn = document.getElementById('listBtn');
+
+        if (view === 'grid') {
+            container.className = 'media-grid';
+            gridBtn.classList.add('active');
+            listBtn.classList.remove('active');
+            document.querySelectorAll('.item-meta').forEach(el => el.style.display = 'none');
+        } else {
+            container.className = 'media-list';
+            listBtn.classList.add('active');
+            gridBtn.classList.remove('active');
+            document.querySelectorAll('.item-meta').forEach(el => el.style.display = 'block');
+        }
+    }
 
     function toggleSelect(el, name) {
+        <?php if ($tab === "images" && $gallery_enabled): ?>
         const index = selectedImages.indexOf(name);
         if (index === -1) {
             selectedImages.push(name);
@@ -278,6 +349,7 @@ function format_size($bytes) {
             el.classList.remove("selected");
         }
         updateHelper();
+        <?php endif; ?>
     }
 
     function updateHelper() {
@@ -318,7 +390,7 @@ function format_size($bytes) {
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
-        alert('Shortcode copied to clipboard!');
+        alert('Copied to clipboard!');
     }
     </script>
 </body>
