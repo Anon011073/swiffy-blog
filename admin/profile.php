@@ -23,6 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_config['admin_about_me'] = $admin_about_me;
     $new_config['use_gravatar'] = $use_gravatar;
 
+    // Social Links
+    $new_config['social_facebook'] = sanitize($_POST['social_facebook'] ?? '');
+    $new_config['social_x'] = sanitize($_POST['social_x'] ?? '');
+    $new_config['social_instagram'] = sanitize($_POST['social_instagram'] ?? '');
+    $new_config['social_tiktok'] = sanitize($_POST['social_tiktok'] ?? '');
+    $new_config['social_github'] = sanitize($_POST['social_github'] ?? '');
+    $new_config['social_deviantart'] = sanitize($_POST['social_deviantart'] ?? '');
+
     // Handle Avatar Upload
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
         $file = $_FILES['avatar'];
@@ -150,6 +158,34 @@ if ($config['use_gravatar'] ?? false) {
                 <div class="form-group">
                     <label>Bio / About Me</label>
                     <textarea name="admin_about_me" rows="4"><?php echo htmlspecialchars($config['admin_about_me'] ?? ''); ?></textarea>
+                </div>
+
+                <div class="section-title" style="margin-top: 1rem; border-left-color: #22c55e;">🌐 Social Links</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="form-group">
+                        <label>Facebook URL</label>
+                        <input type="text" name="social_facebook" value="<?php echo htmlspecialchars($config['social_facebook'] ?? ''); ?>" placeholder="https://facebook.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label>X (Twitter) URL</label>
+                        <input type="text" name="social_x" value="<?php echo htmlspecialchars($config['social_x'] ?? ''); ?>" placeholder="https://x.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Instagram URL</label>
+                        <input type="text" name="social_instagram" value="<?php echo htmlspecialchars($config['social_instagram'] ?? ''); ?>" placeholder="https://instagram.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label>TikTok URL</label>
+                        <input type="text" name="social_tiktok" value="<?php echo htmlspecialchars($config['social_tiktok'] ?? ''); ?>" placeholder="https://tiktok.com/@...">
+                    </div>
+                    <div class="form-group">
+                        <label>GitHub URL</label>
+                        <input type="text" name="social_github" value="<?php echo htmlspecialchars($config['social_github'] ?? ''); ?>" placeholder="https://github.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label>DeviantArt URL</label>
+                        <input type="text" name="social_deviantart" value="<?php echo htmlspecialchars($config['social_deviantart'] ?? ''); ?>" placeholder="https://deviantart.com/...">
+                    </div>
                 </div>
             </div>
 

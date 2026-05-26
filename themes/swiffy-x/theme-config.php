@@ -33,6 +33,7 @@ return [
 
         // Layout
         ['name' => 'reading_max_width', 'label' => 'Article Max Width (px)', 'type' => 'number', 'default' => 720, 'section' => 'layout'],
+        ['name' => 'profile_container_width', 'label' => 'Profile Container Width (px)', 'type' => 'number', 'default' => 900, 'section' => 'layout'],
         ['name' => 'reading_line_height', 'label' => 'Reading Line Height', 'type' => 'text', 'default' => '1.85', 'section' => 'layout'],
         ['name' => 'feed_card_spacing', 'label' => 'Card Spacing (px)', 'type' => 'number', 'default' => 32, 'section' => 'layout'],
         ['name' => 'show_taxonomies', 'label' => 'Show Categories/Tags', 'type' => 'checkbox', 'default' => true, 'section' => 'layout'],
