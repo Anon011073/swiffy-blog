@@ -99,117 +99,84 @@ function format_size($bytes) {
         :root {
             --accent-purple: #8b5cf6;
             --accent-green: #22c55e;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
-        }
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
         .main-content {
             margin-left: 310px;
             margin-top: 50px;
-            padding: 2.5rem;
-            min-height: calc(100vh - 50px);
-        }
-        h1 { font-size: 2rem; font-weight: 800; margin-bottom: 2rem; letter-spacing: -0.02em; }
-
-        .tabs { display: flex; gap: 8px; margin-bottom: 30px; background: rgba(255,255,255,0.03); padding: 6px; border-radius: 12px; width: fit-content; border: 1px solid var(--border); }
-        .tab-link { text-decoration: none; padding: 10px 24px; border-radius: 8px; color: var(--text-muted); font-weight: 600; transition: 0.2s; font-size: 0.95rem; }
-        .tab-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
-        .tab-link.active { background: var(--accent-purple); color: #fff; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); }
-
-        .card {
-            background: var(--bg-card);
             padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            margin-bottom: 2rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
         }
+
+        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+
+        .view-controls { display: flex; gap: 10px; }
+        .view-btn { background: #fff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+        .view-btn.active { background: var(--accent-purple); color: #fff; border-color: var(--accent-purple); }
 
         .upload-area {
-            border: 2px dashed var(--border);
-            padding: 50px 20px;
+            border: 2px dashed #cbd5e1;
+            padding: 30px;
             text-align: center;
-            border-radius: 16px;
+            border-radius: 12px;
             transition: 0.3s;
             cursor: pointer;
-            background: rgba(255,255,255,0.01);
+            background: #f8fafc;
         }
-        .upload-area:hover { border-color: var(--accent-purple); background: rgba(139, 92, 246, 0.04); }
-        .upload-icon { font-size: 3rem; margin-bottom: 15px; display: block; }
+        .upload-area:hover { border-color: var(--accent-purple); background: #f0f4ff; }
 
-        .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
-        .media-item {
-            background: #1a2234;
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            overflow: hidden;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .media-item:hover { transform: translateY(-6px); border-color: var(--accent-purple); box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.3); }
+        /* Grid View */
+        .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-top: 2rem; }
+        .media-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; position: relative; transition: 0.3s; cursor: pointer; }
+        .media-item:hover { transform: translateY(-3px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .media-item.selected { border: 2px solid var(--accent-purple); box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1); }
 
-        .preview-box { width: 100%; aspect-ratio: 1/1; background: #0b1120; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .preview-box { width: 100%; aspect-ratio: 1/1; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .preview-box img { width: 100%; height: 100%; object-fit: cover; }
-        .file-ext-icon { font-size: 2.5rem; font-weight: 800; color: #334155; text-transform: uppercase; letter-spacing: 0.05em; }
+        .file-ext-icon { font-size: 1.5rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
 
-        .item-info { padding: 16px; background: rgba(0,0,0,0.2); }
-        .item-name { display: block; font-size: 0.9rem; font-weight: 600; color: #f1f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
-        .item-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b; }
+        .item-info { padding: 8px; border-top: 1px solid #f1f5f9; }
+        .item-name { display: block; font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; opacity: 0; transition: 0.2s; z-index: 10; }
+        .actions { position: absolute; top: 5px; right: 5px; display: flex; gap: 4px; opacity: 0; transition: 0.2s; }
         .media-item:hover .actions { opacity: 1; }
+        .action-btn { background: #fff; border: 1px solid #eee; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .action-btn:hover { color: var(--accent-purple); }
+        .btn-del:hover { color: #ef4444; }
 
-        .action-btn { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #fff; font-size: 1.1rem; }
-        .action-btn:hover { background: var(--accent-purple); border-color: var(--accent-purple); transform: scale(1.1); }
-        .btn-del:hover { background: #ef4444; border-color: #ef4444; }
+        /* List View */
+        .media-list { display: flex; flex-direction: column; gap: 8px; margin-top: 2rem; }
+        .media-list .media-item { display: flex; align-items: center; padding: 8px 12px; }
+        .media-list .preview-box { width: 50px; height: 50px; aspect-ratio: auto; border-radius: 4px; margin-right: 15px; }
+        .media-list .item-info { border: none; padding: 0; flex: 1; display: flex; align-items: center; justify-content: space-between; }
+        .media-list .item-name { font-size: 0.9rem; }
+        .media-list .item-meta { font-size: 0.8rem; color: #64748b; margin-left: 20px; }
+        .media-list .actions { position: static; opacity: 1; margin-left: 20px; }
 
-        .error { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
-        .success { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); color: #4ade80; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
+        /* Shortcode Helper - Light Theme */
+        .helper-card { margin-top: 30px; border-top: 4px solid var(--accent-purple); }
+        .helper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .helper-badge { background: var(--accent-purple); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+        .helper-preview { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px; min-height: 40px; color: #64748b; font-size: 0.9rem; }
+        .shortcode-box { background: #1e293b; color: #fff; padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 15px; }
+        .shortcode-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; font-size: 1rem; color: #cbd5e0; }
+        .helper-btns { display: flex; gap: 10px; }
+        .helper-btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; transition: 0.2s; font-size: 0.85rem; }
+        .btn-copy { background: var(--accent-green); color: #fff; }
+        .btn-clear { background: #64748b; color: #fff; }
 
-        .log-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
-        .log-table th, .log-table td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border); }
-        .log-table th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-
-        /* Modern Glass Helper */
-        .helper-card {
-            margin-top: 4rem;
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%) !important;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            border-top: 4px solid var(--accent-purple) !important;
-            padding: 2.5rem !important;
-        }
-        .helper-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .helper-header h3 { margin: 0; font-size: 1.5rem; }
-        .helper-badge { background: rgba(139, 92, 246, 0.2); color: var(--accent-purple); border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 16px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; }
-        .helper-preview { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 14px; margin: 20px 0; color: #94a3b8; font-size: 0.95rem; line-height: 1.6; }
-
-        .shortcode-box { background: #0b1120; border: 1px solid rgba(255,255,255,0.1); padding: 12px 12px 12px 24px; border-radius: 16px; display: flex; align-items: center; gap: 20px; }
-        .shortcode-text { flex: 1; font-family: "Fira Code", "JetBrains Mono", monospace; color: var(--accent-purple); font-size: 1.1rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        .helper-btns { display: flex; gap: 12px; }
-        .helper-btn { padding: 12px 24px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; transition: 0.2s; font-size: 0.95rem; }
-        .btn-copy { background: var(--accent-green); color: #fff; box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3); }
-        .btn-copy:hover { transform: translateY(-2px); opacity: 0.9; }
-        .btn-clear { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
-        .btn-clear:hover { background: rgba(255,255,255,0.1); }
-
-        .media-item.selected { border: 2px solid var(--accent-purple); transform: translateY(-8px); box-shadow: 0 0 30px rgba(139, 92, 246, 0.3); }
-        .media-item.selected::after { content: "✓"; position: absolute; top: 12px; left: 12px; background: var(--accent-purple); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; border: 2px solid #fff; }
+        .error { background: #fef2f2; border: 1px solid #fee2e2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        .success { background: #f0fdf4; border: 1px solid #dcfce7; color: #166534; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
     </style>
 </head>
 <body>
 <?php include "sidebar.php"; ?>
     <div class="main-content">
-        <h1>Media Management</h1>
+        <div class="header-row">
+            <h1>Media Management</h1>
+            <div class="view-controls">
+                <button class="view-btn active" id="gridBtn" onclick="setView('grid')">Grid</button>
+                <button class="view-btn" id="listBtn" onclick="setView('list')">List</button>
+            </div>
+        </div>
 
         <div class="tabs">
             <a href="?tab=images" class="tab-link <?php echo $tab === 'images' ? 'active' : ''; ?>">🖼️ Images</a>
@@ -226,49 +193,23 @@ function format_size($bytes) {
                 <input type="hidden" name="csrf_token" value="<?php echo get_csrf_token(); ?>">
                 <input type="file" id="fileInput" name="files[]" multiple style="display: none;" onchange="this.form.submit()">
                 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                    <span class="upload-icon">☁️</span>
-                    <strong>Click or Drag to Upload <?php echo $tab === 'files' ? 'Secure Files' : 'Images'; ?></strong>
-                    <p style="color: #64748b; font-size: 0.9rem; margin-top: 8px;">Supported: <?php echo $tab === 'files' ? 'ZIP, RAR, PDF, EXE, MP3, etc.' : 'JPG, PNG, WEBP, GIF'; ?></p>
+                    <div style="font-size: 1.5rem; margin-bottom: 5px;">☁️</div>
+                    <strong>Click or Drag to Upload</strong>
                 </div>
             </form>
         </div>
 
-        <?php if ($tab === 'files' && !empty($dl_logs)): ?>
-        <div class="card">
-            <h3>📊 Recent Download Activity</h3>
-            <table class="log-table">
-                <thead>
-                    <tr>
-                        <th>File</th>
-                        <th>IP Address</th>
-                        <th>Date & Time</th>
-                        <th>Referrer</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach (array_slice($dl_logs, 0, 10) as $log): ?>
-                        <tr>
-                            <td style="font-weight: 600; color: var(--accent-purple);"><?php echo htmlspecialchars($log['file']); ?></td>
-                            <td><code><?php echo htmlspecialchars($log['ip']); ?></code></td>
-                            <td><?php echo date('M d, Y H:i:s', $log['time']); ?></td>
-                            <td style="color: #a0aec0; font-size: 0.75rem;"><?php echo htmlspecialchars($log['ref']); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-        <?php endif; ?>
-
-        <div class="media-grid">
+        <div class="media-grid" id="mediaContainer">
             <?php if (empty($items)): ?>
-                <p style="text-align: center; color: #475569; grid-column: 1 / -1; padding: 60px; font-size: 1.1rem;">No <?php echo $tab; ?> found. Start by uploading some!</p>
+                <p style="text-align: center; color: #94a3b8; grid-column: 1 / -1; padding: 40px;">No items found.</p>
             <?php else: ?>
                 <?php foreach ($items as $item):
                     $name = basename($item);
                     $ext = pathinfo($name, PATHINFO_EXTENSION);
                     $size = format_size(filesize($item));
+                    $date = date('M d, Y', filemtime($item));
                 ?>
-                    <div class="media-item" <?php echo ($tab === "images" && $gallery_enabled) ? "onclick=\"toggleSelect(this, '".addslashes($name)."')\"" : ""; ?>>
+                    <div class="media-item" onclick="toggleSelect(this, '<?php echo addslashes($name); ?>')">
                         <div class="actions">
                             <?php if ($tab === 'files'): ?>
                                 <a href="#" class="action-btn" title="Copy Shortcode" onclick="copyText('[sfx-download file=&quot;<?php echo addslashes($name); ?>&quot; label=&quot;Download <?php echo addslashes($name); ?>&quot;]'); return false;">🔗</a>
@@ -290,9 +231,8 @@ function format_size($bytes) {
 
                         <div class="item-info">
                             <span class="item-name" title="<?php echo htmlspecialchars($name); ?>"><?php echo htmlspecialchars($name); ?></span>
-                            <div class="item-meta">
-                                <span><?php echo $size; ?></span>
-                                <span><?php echo date('M d', filemtime($item)); ?></span>
+                            <div class="item-meta" style="display: none;">
+                                <span><?php echo $size; ?></span> • <span><?php echo $date; ?></span>
                             </div>
                         </div>
                     </div>
@@ -301,19 +241,16 @@ function format_size($bytes) {
         </div>
 
         <?php if ($tab === "images" && $gallery_enabled): ?>
-        <div class="card helper-card" id="shortcodeHelper">
+        <div class="card helper-card">
             <div class="helper-header">
                 <h3>🖼️ Gallery Shortcode Helper</h3>
                 <span class="helper-badge" id="selectedCount">0 selected</span>
             </div>
-            <p style="margin-bottom: 10px; font-size: 1rem; color: #94a3b8;">Select images from the grid above to build your gallery. The shortcode updates automatically.</p>
-
             <div class="helper-preview" id="imagePreviewNames">No images selected.</div>
-
             <div class="shortcode-box">
                 <div class="shortcode-text" id="shortcodeOutput">[swiffy-gallery images=""]</div>
                 <div class="helper-btns">
-                    <button class="helper-btn btn-copy" onclick="copyGalleryShortcode()">Copy Shortcode</button>
+                    <button class="helper-btn btn-copy" onclick="copyGalleryShortcode()">Copy</button>
                     <button class="helper-btn btn-clear" onclick="clearSelection()">Clear</button>
                 </div>
             </div>
@@ -323,8 +260,29 @@ function format_size($bytes) {
 
     <script>
     let selectedImages = [];
+    let currentView = 'grid';
+
+    function setView(view) {
+        currentView = view;
+        const container = document.getElementById('mediaContainer');
+        const gridBtn = document.getElementById('gridBtn');
+        const listBtn = document.getElementById('listBtn');
+
+        if (view === 'grid') {
+            container.className = 'media-grid';
+            gridBtn.classList.add('active');
+            listBtn.classList.remove('active');
+            document.querySelectorAll('.item-meta').forEach(el => el.style.display = 'none');
+        } else {
+            container.className = 'media-list';
+            listBtn.classList.add('active');
+            gridBtn.classList.remove('active');
+            document.querySelectorAll('.item-meta').forEach(el => el.style.display = 'block');
+        }
+    }
 
     function toggleSelect(el, name) {
+        <?php if ($tab === "images" && $gallery_enabled): ?>
         const index = selectedImages.indexOf(name);
         if (index === -1) {
             selectedImages.push(name);
@@ -334,6 +292,7 @@ function format_size($bytes) {
             el.classList.remove("selected");
         }
         updateHelper();
+        <?php endif; ?>
     }
 
     function updateHelper() {
@@ -374,7 +333,7 @@ function format_size($bytes) {
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
-        alert('Shortcode copied to clipboard!');
+        alert('Copied to clipboard!');
     }
     </script>
 </body>
