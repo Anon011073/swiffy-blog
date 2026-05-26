@@ -116,12 +116,7 @@
     <header class="site-header">
         <div class="container header-inner">
             <div class="site-title">
-                <a href="index.php">
-                    <?php echo htmlspecialchars($config['site_name']); ?>
-                    <?php if (!empty($opts['site_title_suffix'])): ?>
-                        <span class="slash"><?php echo htmlspecialchars($opts['site_title_separator'] ?? '/'); ?></span><?php echo htmlspecialchars($opts['site_title_suffix']); ?>
-                    <?php endif; ?>
-                </a>
+                <a href="index.php"><?php echo htmlspecialchars($config['site_name']); ?><?php if (!empty($opts['site_title_suffix'])): ?><span class="slash"><?php echo htmlspecialchars($opts['site_title_separator'] ?? '/'); ?></span><?php echo htmlspecialchars($opts['site_title_suffix']); ?><?php endif; ?></a>
             </div>
             <nav class="main-nav">
                 <ul>

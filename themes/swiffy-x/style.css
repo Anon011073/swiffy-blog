@@ -107,7 +107,7 @@ a {
 
 .site-title .slash {
     color: var(--text-muted);
-    margin: 0 4px;
+    margin: 0;
     font-weight: 400;
 }
 

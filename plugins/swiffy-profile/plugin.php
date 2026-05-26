@@ -11,6 +11,7 @@ return [
                 require_once __DIR__ . '/../../app/comments.php';
 
                 $config = load_config();
+                $opts = $config['theme_options'] ?? [];
                 $nickname = !empty($config['admin_nickname']) ? $config['admin_nickname'] : ($config['admin_user'] ?? 'Admin');
                 $handle = !empty($config['admin_user']) ? $config['admin_user'] : 'admin';
                 $bio = !empty($config['admin_about_me']) ? nl2br(htmlspecialchars($config['admin_about_me'])) : 'No bio available.';
@@ -46,14 +47,14 @@ return [
                 });
                 $latest_comments = array_slice($all_comments, 0, 5);
 
-                $profile_width = $config['profile_container_width'] ?? 900;
+                $profile_width = !empty($opts['reading_max_width']) ? $opts['reading_max_width'] : 720;
 
                 $html = '
                 <style>
                     .sfx-profile-wrapper {
                         display: flex;
                         justify-content: center;
-                        padding: 40px 20px;
+                        padding: 20px;
                         background: #0D131F;
                         min-height: 100vh;
                         font-family: "Inter", sans-serif;

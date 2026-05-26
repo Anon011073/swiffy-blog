@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'] ?? '';
     $content = $_POST['content'] ?? '';
     $new_slug = $_POST['slug'] ?? generate_slug($title);
+    $hide_title = isset($_POST['hide_title']);
 
     if (empty($title) || empty($content)) {
         $error = "Title and content are required.";
@@ -31,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = [
             'title' => $title,
             'slug' => $new_slug,
-            'content' => $content
+            'content' => $content,
+            'hide_title' => $hide_title
         ];
 
         if ($slug && $slug !== $new_slug) {
@@ -94,6 +96,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($page_data['title'] ?? ''); ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="hide_title" <?php echo ($page_data['hide_title'] ?? false) ? 'checked' : ''; ?>>
+                        Hide Page Title
+                    </label>
                 </div>
 
                 <div class="form-group">
